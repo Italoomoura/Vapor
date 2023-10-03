@@ -1,0 +1,25 @@
+Tabela user:
+- idUser int primary key identity not null
+- senha varchar(255) not null
+- nickname varchar(60) not null
+- idade int not null
+- profile_picture image
+- isDev bit
+
+Tabela jogos:
+- idGame int primary key identity not null
+- nomeGame varchar(60)
+- nomeDev varchar(60)
+- nomeDistribuidora(60)
+- info varchar(1000)
+- preco money
+- genero varchar(60)
+- isDesconto bit
+- lancamento date
+- capa imagem
+
+Tabela possui:
+- idUser
+- idGame 
+- dataCompra date
+- valorCompra money
