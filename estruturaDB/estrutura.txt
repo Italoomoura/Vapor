@@ -19,7 +19,7 @@ Tabela jogos:
 - capa imagem
 
 Tabela possui:
-- idUser
-- idGame 
+- idUser FK
+- idGame FK
 - dataCompra date
 - valorCompra money
