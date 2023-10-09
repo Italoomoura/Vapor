@@ -1,10 +1,12 @@
-package tela;
-
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.regex.Pattern;
-
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class TelaCadastro extends javax.swing.JPanel {
+
 
     public TelaCadastro(TelaLogin telaLogin, JPanel panelLogin) {
     	setVisible(false);
@@ -199,11 +201,53 @@ public class TelaCadastro extends javax.swing.JPanel {
         	return 0;
         }
         
+        Connection conexao = null;
+
+        try {
+            // Carregando o driver JDBC do SQL Server
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+
+            // Configurando a URL de conexão
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=vapor";
+
+            // Estabelecendo a conexão com o banco de dados
+            conexao = DriverManager.getConnection(url);
+
+            if (conexao != null) {
+                System.out.println("Conexão com o SQL Server estabelecida com sucesso!");
+                // Você pode executar consultas SQL ou outras operações aqui
+            } else {
+                System.out.println("Falha ao conectar ao SQL Server.");
+            }
+        } catch (ClassNotFoundException e) {
+            System.out.println("Driver JDBC não encontrado: " + e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("Erro ao conectar ao SQL Server: " + e.getMessage());
+        } finally {
+            // Certifique-se de fechar a conexão quando você não precisar mais dela
+            if (conexao != null) {
+                try {
+                    conexao.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         
-        System.out.println("Sucesso");
+        
+        
+        //irLogin();
         cadastroErrorLabel.setVisible(false);
         return 1;
-    }       
+    }
+    
+    //private void irLogin() {
+    	//this.setContentPane(telaLogin);
+    	//telaLogin.setVisible(true);
+    	//this.invalidate();
+    	//this.validate();
+    	//this.repaint();
+    //}  
     
     public static boolean patternMatches(String emailAddress, String regexPattern) {
         return Pattern.compile(regexPattern)

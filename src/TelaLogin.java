@@ -1,6 +1,5 @@
-package tela;
-
 import java.awt.Dimension;
+import java.awt.Toolkit;
 
 import javax.swing.JPanel;
 
@@ -14,6 +13,15 @@ public class TelaLogin extends javax.swing.JFrame {
     	setTitle("Vapor - Login");
     	setPreferredSize(new Dimension(670, 355));
     	setResizable(false);
+    	//setLocationRelativeTo(null);
+    	
+    	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    	
+    	int x = (screenSize.width - getWidth()) / 3;
+        int y = (screenSize.height - getHeight()) / 4;
+
+        // Define a posição do JFrame
+        setLocation(x, y);
     	
         cadastro_loginPanel = new javax.swing.JPanel();
         labelCadastro = new javax.swing.JLabel();
@@ -167,7 +175,7 @@ public class TelaLogin extends javax.swing.JFrame {
     	this.repaint();
     }                                              
 
-    public static void main(String args[]) {
+/*    public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -186,13 +194,13 @@ public class TelaLogin extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
+        /* Create and display the form *//*
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new TelaLogin().setVisible(true);
             }
         });
-    }
+    }*/
                     
     private javax.swing.JLabel bemVindoLabel;
     private javax.swing.JButton buttonEntrar;
