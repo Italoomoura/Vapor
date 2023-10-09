@@ -51,6 +51,13 @@ public class TelaCadastro extends javax.swing.JPanel {
         cadastroErrorLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         cadastroErrorLabel.setVisible(false);
 
+        cadastroErrorLabel.setFont(new java.awt.Font("Dialog", 1, 14));
+        cadastroErrorLabel.setForeground(new java.awt.Color(255, 51, 51));
+        cadastroErrorLabel.setText("Usuário existente");
+        cadastroErrorLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        cadastroErrorLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        cadastroErrorLabel.setVisible(false);
+
         javax.swing.GroupLayout fieldsPanelLayout = new javax.swing.GroupLayout(fieldsPanel);
         fieldsPanel.setLayout(fieldsPanelLayout);
         fieldsPanelLayout.setHorizontalGroup(
@@ -62,7 +69,7 @@ public class TelaCadastro extends javax.swing.JPanel {
                         .addGroup(fieldsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(fieldsPanelLayout.createSequentialGroup()
                                 .addComponent(fieldUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
                                 .addComponent(fieldSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(fieldsPanelLayout.createSequentialGroup()
                                 .addComponent(fieldEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -70,29 +77,25 @@ public class TelaCadastro extends javax.swing.JPanel {
                                 .addComponent(fieldSenhaConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, fieldsPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(fieldsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(cadastroErrorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
-                            .addComponent(buttonConfirmarCadastro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 158, Short.MAX_VALUE)
+                        .addComponent(buttonConfirmarCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(158, 158, 158))))
         );
-        
         fieldsPanelLayout.setVerticalGroup(
-                fieldsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(fieldsPanelLayout.createSequentialGroup()
-                    .addContainerGap(38, Short.MAX_VALUE)
-                    .addGroup(fieldsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(fieldUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(fieldSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(fieldsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(fieldEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(fieldSenhaConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(41, 41, 41)
-                    .addComponent(buttonConfirmarCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(12, 12, 12)
-                    .addComponent(cadastroErrorLabel))
-            );
+            fieldsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(fieldsPanelLayout.createSequentialGroup()
+                .addContainerGap(38, Short.MAX_VALUE)
+                .addGroup(fieldsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fieldUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fieldSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(fieldsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fieldEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fieldSenhaConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(buttonConfirmarCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         buttonVoltar.setFont(new java.awt.Font("Dialog", 1, 14));
         buttonVoltar.setText("Voltar");
@@ -107,14 +110,19 @@ public class TelaCadastro extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(cadastroPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(buttonVoltar, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
-                .addGap(598, 598, 598))
             .addGroup(layout.createSequentialGroup()
-                .addGap(88, 88, 88)
-                .addComponent(fieldsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(cadastroErrorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(buttonVoltar, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
+                        .addGap(598, 598, 598))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(fieldsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(92, 92, 92))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -122,11 +130,13 @@ public class TelaCadastro extends javax.swing.JPanel {
                 .addComponent(cadastroPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(fieldsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cadastroErrorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonVoltar)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-    }                                                    
+    }                                                      
 
     private void buttonVoltarActionPerformed(java.awt.event.ActionEvent evt, TelaLogin telaLogin, JPanel loginPanel) {                                             
         telaLogin.setContentPane(loginPanel);
