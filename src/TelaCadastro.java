@@ -146,8 +146,14 @@ public class TelaCadastro extends javax.swing.JPanel {
         String valores[] = {usuarioText, emailText, senhaText, senhaConfirmarText};
     	String valoresInvalidos[] = {"Usuário", "Senha", "Email", "Confirmar senha"};
     	
+        //Tentei deixar esses cadastroErrorLabel.setText e etc em função, mas pra ficar em função precisa ficar estático, ou seja, não muda o texto quando ta dentro de função.
         
         for (int i=0; i<valores.length; i++) {
+        	if(valores[i].strip().length() <= 0) {
+        		cadastroErrorLabel.setText("Valor inseridos são inválidos.");
+    			cadastroErrorLabel.setVisible(true);
+    			return 0;
+        	}
         	for(int j=0; j<valoresInvalidos.length; j++) {
         		if(valores[i].equals(valoresInvalidos[j])) {
         			cadastroErrorLabel.setText("Valor inseridos são inválidos.");
