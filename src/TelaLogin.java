@@ -1,6 +1,12 @@
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class TelaLogin extends javax.swing.JFrame {
@@ -156,15 +162,9 @@ public class TelaLogin extends javax.swing.JFrame {
     }                                                                  
 
     private void buttonEntrarActionPerformed(java.awt.event.ActionEvent evt) {
-        //String user = userInput.getText();
-        //String senha = senhaInput.getText();
-        
-        //sql
-        
-        /*if(!user.equalsIgnoreCase(usuario)) {
-        	labelError.setVisible(true);
-        }
-        System.out.println(user);*/
+        String userText = userInput.getText();
+        String senhaText = senhaInput.getText();
+        sqlLogin(userText, senhaText);
     }                                            
 
     private void cadastroButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -173,34 +173,52 @@ public class TelaLogin extends javax.swing.JFrame {
     	this.invalidate();
     	this.validate();
     	this.repaint();
-    }                                              
+    }                   
+    
+    private void sqlLogin(String user, String senha) {
+		Connection conexao = null;
+		String selectUser = "SELECT nickname, senha FROM users WHERE nickname = ?";
+	
+	    try {
+	        Class.forName("com.mysql.cj.jdbc.Driver");
+	        String url = "jdbc:mysql://localhost/vapor";
+	        conexao = DriverManager.getConnection(url, "root", "root");
+	
+	        if (conexao != null) {
+	            System.out.println("Conexão com o SQL Server estabelecida com sucesso!");
 
-/*    public static void main(String args[]) {
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TelaLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TelaLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TelaLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TelaLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+				PreparedStatement selectCon = conexao.prepareStatement(selectUser);
+				selectCon.setString(1, user);
+	            
+	            ResultSet resultado = selectCon.executeQuery();
+	            
+	            if(resultado.next() && (resultado.getString("senha")).equals(senha)) {
+	            	System.out.println("O usuário: "+ resultado.getString("nickname") + " existe");
+	            	JOptionPane.showMessageDialog(this, "Usuário logado com sucesso. Bem vindo " + user);
 
-        /* Create and display the form *//*
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new TelaLogin().setVisible(true);
-            }
-        });
-    }*/
+	            }
+	            else {
+	            	labelError.setVisible(true);
+	            	labelError.setText("Usuário ou senha incorretos.");
+	            }
+	            
+	        } else {
+	            System.out.println("Falha ao conectar ao SQL Server.");
+	        }
+	    } catch (ClassNotFoundException e) {
+	        System.out.println("Driver JDBC não encontrado: " + e.getMessage());
+	    } catch (SQLException e) {
+	        System.out.println("Erro ao conectar ao SQL Server: " + e.getMessage());
+	    } finally {
+	        if (conexao != null) {
+	            try {
+	                conexao.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+   }
                     
     private javax.swing.JLabel bemVindoLabel;
     private javax.swing.JButton buttonEntrar;
