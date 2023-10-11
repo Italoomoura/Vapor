@@ -175,7 +175,7 @@ public class TelaLogin extends javax.swing.JFrame {
     	this.repaint();
     }                   
     
-    private void sqlLogin(String user, String senha) {
+    private boolean sqlLogin(String user, String senha) {
 		Connection conexao = null;
 		String selectUser = "SELECT nickname, senha FROM users WHERE nickname = ?";
 	
@@ -193,23 +193,33 @@ public class TelaLogin extends javax.swing.JFrame {
 	            ResultSet resultado = selectCon.executeQuery();
 	            
 	            if(resultado.next() && (resultado.getString("senha")).equals(senha)) {
-	            	System.out.println("O usuário: "+ resultado.getString("nickname") + " existe");
 	            	JOptionPane.showMessageDialog(this, "Usuário logado com sucesso. Bem vindo " + user);
-
 	            }
 	            else {
 	            	labelError.setVisible(true);
 	            	labelError.setText("Usuário ou senha incorretos.");
+	            	return false;
 	            }
-	            
-	        } else {
-	            System.out.println("Falha ao conectar ao SQL Server.");
-	        }
-	    } catch (ClassNotFoundException e) {
+	        } 
+	        
+	        else {
+	            labelError.setVisible(true);
+	            labelError.setText("Houve problemas com a conexão à base de dados.");
+            	return false;
+	        } 
+	    } 
+	    
+	    catch (ClassNotFoundException e) {
 	        System.out.println("Driver JDBC não encontrado: " + e.getMessage());
-	    } catch (SQLException e) {
+	        return false;
+	    } 
+	    
+	    catch (SQLException e) {
 	        System.out.println("Erro ao conectar ao SQL Server: " + e.getMessage());
-	    } finally {
+	        return false;
+	    } 
+	    
+	    finally {
 	        if (conexao != null) {
 	            try {
 	                conexao.close();
@@ -218,6 +228,8 @@ public class TelaLogin extends javax.swing.JFrame {
 	            }
 	        }
 	    }
+	    
+	    return true;
    }
                     
     private javax.swing.JLabel bemVindoLabel;
