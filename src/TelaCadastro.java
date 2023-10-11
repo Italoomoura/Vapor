@@ -1,9 +1,13 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.regex.Pattern;
+
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
 
 public class TelaCadastro extends javax.swing.JPanel {
 
@@ -42,7 +46,7 @@ public class TelaCadastro extends javax.swing.JPanel {
         buttonConfirmarCadastro.setText("Confirmar cadastro");
         buttonConfirmarCadastro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonConfirmarCadastroActionPerformed(evt);
+                buttonConfirmarCadastroActionPerformed(evt, telaLogin, panelLogin);
             }
         });
 
@@ -148,7 +152,7 @@ public class TelaCadastro extends javax.swing.JPanel {
     	this.repaint();
     }                                            
 
-    private int buttonConfirmarCadastroActionPerformed(java.awt.event.ActionEvent evt) {  
+    private int buttonConfirmarCadastroActionPerformed(java.awt.event.ActionEvent evt, TelaLogin telaLogin, JPanel loginPanel) {  
     	String usuarioText = fieldUsuario.getText();
         String emailText = fieldEmail.getText();
         String senhaText = fieldSenha.getText();
@@ -201,58 +205,78 @@ public class TelaCadastro extends javax.swing.JPanel {
         	return 0;
         }
         
-        Connection conexao = null;
-
-        try {
-            // Carregando o driver JDBC do SQL Server
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-
-            // Configurando a URL de conexão
-            String url = "jdbc:sqlserver://localhost:1433;databaseName=vapor";
-
-            // Estabelecendo a conexão com o banco de dados
-            conexao = DriverManager.getConnection(url);
-
-            if (conexao != null) {
-                System.out.println("Conexão com o SQL Server estabelecida com sucesso!");
-                // Você pode executar consultas SQL ou outras operações aqui
-            } else {
-                System.out.println("Falha ao conectar ao SQL Server.");
-            }
-        } catch (ClassNotFoundException e) {
-            System.out.println("Driver JDBC não encontrado: " + e.getMessage());
-        } catch (SQLException e) {
-            System.out.println("Erro ao conectar ao SQL Server: " + e.getMessage());
-        } finally {
-            // Certifique-se de fechar a conexão quando você não precisar mais dela
-            if (conexao != null) {
-                try {
-                    conexao.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+        
+        if(!sqlCadastro(usuarioText, senhaText, emailText)) {
+        	cadastroErrorLabel.setText("Usuário já existe");
+   		 	cadastroErrorLabel.setVisible(true);
+   		 	return 0;
         }
         
-        
-        
-        //irLogin();
-        cadastroErrorLabel.setVisible(false);
+        telaLogin.setContentPane(loginPanel);
+    	loginPanel.setVisible(true);
+    	this.invalidate();
+    	this.validate();
+    	this.repaint();
+        //cadastroErrorLabel.setVisible(false);
         return 1;
-    }
+    } 
     
-    //private void irLogin() {
-    	//this.setContentPane(telaLogin);
-    	//telaLogin.setVisible(true);
-    	//this.invalidate();
-    	//this.validate();
-    	//this.repaint();
-    //}  
-    
-    public static boolean patternMatches(String emailAddress, String regexPattern) {
+    private static boolean patternMatches(String emailAddress, String regexPattern) {
         return Pattern.compile(regexPattern)
           .matcher(emailAddress)
           .matches();
+    }
+    
+    private boolean sqlCadastro(String user, String senha, String email) {
+    	 Connection conexao = null;
+    	 String insertUser = "INSERT INTO users(nickname, senha, email) VALUES (?,?,?);";
+    	 String selectUser = "SELECT nickname FROM users WHERE nickname = ?";
+
+         try {
+             Class.forName("com.mysql.cj.jdbc.Driver");
+             String url = "jdbc:mysql://localhost/vapor";
+             conexao = DriverManager.getConnection(url, "root", "root");
+
+             if (conexao != null) {
+            	 
+            	 PreparedStatement st = conexao.prepareStatement(selectUser);
+            	 st.setString(1, user);
+            	 ResultSet resultado = st.executeQuery();
+            	 if(resultado.next()) {
+            		 return false;
+            	 }
+            	 
+                 System.out.println("Conexão com o SQL Server estabelecida com sucesso!");
+                 PreparedStatement insertCon = conexao.prepareStatement(insertUser);
+                 insertCon.setString(1, user.trim());
+                 insertCon.setString(2, senha.trim());
+                 insertCon.setString(3, email.trim());
+                 
+                 insertCon.executeUpdate();
+                 
+                 JOptionPane.showMessageDialog(this, "Dados inseridos com sucesso.");
+                 
+             } else {
+                 System.out.println("Falha ao conectar ao SQL Server.");
+             }
+             
+         } catch (ClassNotFoundException e) {
+             System.out.println("Driver JDBC não encontrado: " + e.getMessage());
+             
+         } catch (SQLException e) {
+             System.out.println("Erro ao conectar ao SQL Server: " + e.getMessage());
+             
+         } finally {
+             if (conexao != null) {
+                 try {
+                     conexao.close();
+                 } catch (SQLException e) {
+                     e.printStackTrace();
+                 }
+             }
+         }
+         
+         return true;
     }
              
     private javax.swing.JButton buttonConfirmarCadastro;
