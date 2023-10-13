@@ -1,3 +1,5 @@
+package tela;
+
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.sql.Connection;
@@ -6,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -14,7 +17,7 @@ public class TelaLogin extends javax.swing.JFrame {
 	private JPanel mainPanelLogin = new javax.swing.JPanel();
 	TelaCadastro telaCadastro = new TelaCadastro(this, mainPanelLogin);
 
-    public TelaLogin() {
+    public TelaLogin(VaporFrame vaporFrame) {
     	
     	setTitle("Vapor - Login");
     	setPreferredSize(new Dimension(670, 355));
@@ -98,7 +101,7 @@ public class TelaLogin extends javax.swing.JFrame {
         buttonEntrar.setText("Entrar");
         buttonEntrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonEntrarActionPerformed(evt);
+                buttonEntrarActionPerformed(evt, vaporFrame);
             }
         });
         loginProcedurePanel.add(buttonEntrar);
@@ -161,10 +164,15 @@ public class TelaLogin extends javax.swing.JFrame {
         pack();
     }                                                                  
 
-    private void buttonEntrarActionPerformed(java.awt.event.ActionEvent evt) {
+    private void buttonEntrarActionPerformed(java.awt.event.ActionEvent evt, VaporFrame vaporFrame) {
         String userText = userInput.getText();
         String senhaText = senhaInput.getText();
-        sqlLogin(userText, senhaText);
+        if(sqlLogin(userText, senhaText)) {
+            //this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        	this.dispose();
+            vaporFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            vaporFrame.setVisible(true);
+        }
     }                                            
 
     private void cadastroButtonActionPerformed(java.awt.event.ActionEvent evt) {
