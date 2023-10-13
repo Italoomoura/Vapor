@@ -1,3 +1,5 @@
+package tela;
+
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.sql.Connection;
@@ -9,7 +11,6 @@ import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 
 public class TelaCadastro extends javax.swing.JPanel {
@@ -24,11 +25,12 @@ public class TelaCadastro extends javax.swing.JPanel {
         fieldsPanel = new javax.swing.JPanel();
         fieldUsuario = new javax.swing.JTextField();
         fieldEmail = new javax.swing.JTextField();
-        fieldSenhaConfirmar = new javax.swing.JTextField();
-        fieldSenha = new javax.swing.JTextField();
+        fieldSenhaConfirmar = new javax.swing.JPasswordField();
+        fieldSenha = new javax.swing.JPasswordField();
         buttonConfirmarCadastro = new javax.swing.JButton();
         cadastroErrorLabel = new javax.swing.JLabel();
         buttonVoltar = new javax.swing.JButton();
+        showPassword = new javax.swing.JRadioButton();
 
         cadastroPanel.setLayout(new java.awt.BorderLayout());
 
@@ -74,12 +76,14 @@ public class TelaCadastro extends javax.swing.JPanel {
         });
 
         fieldSenhaConfirmar.setText("Confirmar senha");
+        fieldSenhaConfirmar.setEchoChar((char)0);
         fieldSenhaConfirmar.addFocusListener(new FocusListener() {
         	int focusTimes = 0;
         	
 			@Override
 			public void focusGained(FocusEvent e) {
 				if (focusTimes == 0) {
+					fieldSenhaConfirmar.setEchoChar('*');
 					fieldSenhaConfirmar.setText("");
 					focusTimes++;
 				}
@@ -92,11 +96,13 @@ public class TelaCadastro extends javax.swing.JPanel {
         });
         
         fieldSenha.setText("Senha");
+        fieldSenha.setEchoChar((char)0);
         fieldSenha.addFocusListener(new FocusListener() {
         	int focusTimes = 0;
 			@Override
 			public void focusGained(FocusEvent e) {
 				if (focusTimes == 0) {
+					fieldSenha.setEchoChar('*');
 					fieldSenha.setText("");
 					focusTimes++;
 				}
@@ -169,6 +175,13 @@ public class TelaCadastro extends javax.swing.JPanel {
                 buttonVoltarActionPerformed(evt, telaLogin, panelLogin);
             }
         });
+        
+        showPassword.setSelected(true);
+        showPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showPasswordActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -187,14 +200,21 @@ public class TelaCadastro extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(fieldsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(92, 92, 92))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(showPassword)
+                        .addGap(58, 58, 58))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(cadastroPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(fieldsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(fieldsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addComponent(showPassword)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cadastroErrorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -214,15 +234,13 @@ public class TelaCadastro extends javax.swing.JPanel {
     private int buttonConfirmarCadastroActionPerformed(java.awt.event.ActionEvent evt, TelaLogin telaLogin, JPanel loginPanel) {  
     	String usuarioText = fieldUsuario.getText();
         String emailText = fieldEmail.getText();
-        String senhaText = fieldSenha.getText();
-        String senhaConfirmarText = fieldSenhaConfirmar.getText();
+        String senhaText = new String(fieldSenha.getPassword());
+        String senhaConfirmarText = new String(fieldSenhaConfirmar.getPassword());
         String confirmEmail = "^(.+)@(\\S+)$";
         
-        String valores[] = {usuarioText, emailText, senhaText, senhaConfirmarText};
+        String valores[] = {usuarioText, emailText, senhaConfirmarText};
     	String valoresInvalidos[] = {"Usuário", "Senha", "Email", "Confirmar senha"};
     	
-        //Tentei deixar esses cadastroErrorLabel.setText e etc em função, mas pra ficar em função precisa ficar estático, ou seja, não muda o texto quando ta dentro de função.
-        
         for (int i=0; i<valores.length; i++) {
         	if(valores[i].strip().length() <= 0) {
         		cadastroErrorLabel.setText("Valor inseridos são inválidos.");
@@ -276,7 +294,6 @@ public class TelaCadastro extends javax.swing.JPanel {
     	this.invalidate();
     	this.validate();
     	this.repaint();
-        //cadastroErrorLabel.setVisible(false);
         return 1;
     } 
     
@@ -337,6 +354,17 @@ public class TelaCadastro extends javax.swing.JPanel {
          
          return true;
     }
+    
+    private void showPasswordActionPerformed(java.awt.event.ActionEvent evt) {                                             
+        if(!showPassword.isSelected()) {
+        	fieldSenha.setEchoChar((char)0);
+        	fieldSenhaConfirmar.setEchoChar((char)0);
+        }
+        else {
+        	fieldSenha.setEchoChar('*');
+        	fieldSenhaConfirmar.setEchoChar('*');
+        }
+    } 
              
     private javax.swing.JButton buttonConfirmarCadastro;
     private javax.swing.JButton buttonVoltar;
@@ -344,8 +372,9 @@ public class TelaCadastro extends javax.swing.JPanel {
     private javax.swing.JLabel cadastroLabel;
     private javax.swing.JPanel cadastroPanel;
     private javax.swing.JTextField fieldEmail;
-    private javax.swing.JTextField fieldSenha;
-    private javax.swing.JTextField fieldSenhaConfirmar;
+    private javax.swing.JPasswordField fieldSenha;
+    private javax.swing.JPasswordField fieldSenhaConfirmar;
     private javax.swing.JTextField fieldUsuario;
-    private javax.swing.JPanel fieldsPanel;                 
+    private javax.swing.JPanel fieldsPanel;   
+    private javax.swing.JRadioButton showPassword;
 }
