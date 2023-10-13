@@ -1,3 +1,5 @@
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,6 +9,7 @@ import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 
 public class TelaCadastro extends javax.swing.JPanel {
@@ -35,12 +38,75 @@ public class TelaCadastro extends javax.swing.JPanel {
         cadastroPanel.add(cadastroLabel, java.awt.BorderLayout.CENTER);
 
         fieldUsuario.setText("Usuário");
+        fieldUsuario.addFocusListener(new FocusListener() {
+        	int focusTimes = 0;
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (focusTimes == 0) {
+					fieldUsuario.setText("");
+					focusTimes++;
+				}
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+			}
+			
+        });
 
         fieldEmail.setText("Email");
+        fieldEmail.addFocusListener(new FocusListener() {
+        	int focusTimes = 0;
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (focusTimes == 0) {
+					fieldEmail.setText("");
+					focusTimes++;
+				}
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+			}
+			
+        });
 
         fieldSenhaConfirmar.setText("Confirmar senha");
+        fieldSenhaConfirmar.addFocusListener(new FocusListener() {
+        	int focusTimes = 0;
+        	
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (focusTimes == 0) {
+					fieldSenhaConfirmar.setText("");
+					focusTimes++;
+				}
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+			}
+			
+        });
         
         fieldSenha.setText("Senha");
+        fieldSenha.addFocusListener(new FocusListener() {
+        	int focusTimes = 0;
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (focusTimes == 0) {
+					fieldSenha.setText("");
+					focusTimes++;
+				}
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+			}
+			
+        });
         
         buttonConfirmarCadastro.setFont(new java.awt.Font("Dialog", 1, 12));
         buttonConfirmarCadastro.setText("Confirmar cadastro");
@@ -49,13 +115,6 @@ public class TelaCadastro extends javax.swing.JPanel {
                 buttonConfirmarCadastroActionPerformed(evt, telaLogin, panelLogin);
             }
         });
-
-        cadastroErrorLabel.setFont(new java.awt.Font("Dialog", 1, 14));
-        cadastroErrorLabel.setForeground(new java.awt.Color(255, 51, 51));
-        cadastroErrorLabel.setText("Usuário existente");
-        cadastroErrorLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        cadastroErrorLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        cadastroErrorLabel.setVisible(false);
 
         cadastroErrorLabel.setFont(new java.awt.Font("Dialog", 1, 14));
         cadastroErrorLabel.setForeground(new java.awt.Color(255, 51, 51));
