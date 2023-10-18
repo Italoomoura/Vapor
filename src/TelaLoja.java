@@ -13,7 +13,9 @@ import java.util.ArrayList;
 
 public class TelaLoja extends JPanel {
     private DefaultListModel<String> listaDeJogosModel;
+    private DefaultListModel<String> listaDistribuidoraModel;
     private JList<String> listaDeJogos;
+    private JList<String> listaDeDistribuidoras;
     private TelaBiblioteca telaBiblioteca;
 
     public TelaLoja(TelaBiblioteca telaBiblioteca) {
@@ -22,7 +24,7 @@ public class TelaLoja extends JPanel {
 
         // Lista de nomes de jogos fictícios
         Connection conexao = null;
-		String selectGame = "SELECT idGame, nomeGame FROM games";
+		String selectGame = "SELECT * FROM games";
 		//String qtdGames = "SELECT COUNT(idGame) FROM games";
 		
 		try {
@@ -40,10 +42,14 @@ public class TelaLoja extends JPanel {
 				ResultSet resultCon = selectCon.executeQuery(selectGame);
 				
 				ArrayList<String> jogos = new ArrayList<String>();
-
+				ArrayList<String> distribuidoras = new ArrayList<String>();
+				
+				
 				while (resultCon.next()) { 
-				    jogos.add(resultCon.getString("nomeGame"));				    
+				    jogos.add(resultCon.getString("nomeGame"));		
+				    distribuidoras.add(resultCon.getString("nomeDistribuidora"));
 				}
+				
 				
 				/*
 				int i = 0;
@@ -53,13 +59,35 @@ public class TelaLoja extends JPanel {
 				}
 				*/
 				
+				int tamanho = jogos.size();
+				
 				listaDeJogosModel = new DefaultListModel<>();
+				String jogo, distribuidora;
+				
+				for (int i = 0; i < tamanho; i++) {
+				    jogo = jogos.get(i);
+				    distribuidora = distribuidoras.get(i);
+				    
+				    listaDeJogosModel.addElement(jogo+" - "+distribuidora);
+				}
+				listaDeJogos = new JList<>(listaDeJogosModel);
+				
+				/*
 		        for (String jogo : jogos) {
 		            listaDeJogosModel.addElement(jogo);
 		        }
-
 		        listaDeJogos = new JList<>(listaDeJogosModel);
+		        
+		        
+		        
+		        for (String distribuidora : distribuidoras) {
+		        	listaDistribuidoraModel.addElement(distribuidora);
+		        }
+		        listaDeDistribuidoras = new JList<>(listaDistribuidoraModel);
+		        */
+		        
 		        JScrollPane scrollPane = new JScrollPane(listaDeJogos);
+		        
 		        add(scrollPane, BorderLayout.CENTER);
 
 		        listaDeJogos.addMouseListener(new MouseAdapter() {
