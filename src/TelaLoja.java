@@ -1,7 +1,7 @@
+package tela;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -10,22 +10,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TelaLoja extends JPanel {
     private DefaultListModel<String> listaDeJogosModel;
-    private DefaultListModel<String> listaDistribuidoraModel;
     private JList<String> listaDeJogos;
-    private JList<String> listaDeDistribuidoras;
-    private TelaBiblioteca telaBiblioteca;
+    private Map<String, String> jogoId = new HashMap<String, String>();
 
-    public TelaLoja(TelaBiblioteca telaBiblioteca) {
-        this.telaBiblioteca = telaBiblioteca;
+    public TelaLoja(VaporFrame frame, JTabbedPane tabs, TelaBiblioteca biblioteca) {
         setLayout(new BorderLayout());
 
-        // Lista de nomes de jogos fictícios
         Connection conexao = null;
 		String selectGame = "SELECT * FROM games";
-		//String qtdGames = "SELECT COUNT(idGame) FROM games";
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -34,11 +31,6 @@ public class TelaLoja extends JPanel {
 	
 	        if (conexao != null) {
 	        	PreparedStatement selectCon = conexao.prepareStatement(selectGame);
-				//PreparedStatement selectQtd = conexao.prepareStatement(qtdGames);
-				//ResultSet resultQtd = selectQtd.executeQuery();
-				
-				//int qtd =  resultQtd.getInt("idGame");
-				//String[] jogos = new String[qtd];
 				ResultSet resultCon = selectCon.executeQuery(selectGame);
 				
 				ArrayList<String> jogos = new ArrayList<String>();
@@ -48,43 +40,20 @@ public class TelaLoja extends JPanel {
 				while (resultCon.next()) { 
 				    jogos.add(resultCon.getString("nomeGame"));		
 				    distribuidoras.add(resultCon.getString("nomeDistribuidora"));
+				    jogoId.put(resultCon.getString("nomeGame"), Integer.toString(resultCon.getInt("idGame")));
 				}
-				
-				
-				/*
-				int i = 0;
-				while(resultCon.next()) {
-					jogos[i] = resultCon.getString("nomeGame");
-					i++;
-				}
-				*/
 				
 				int tamanho = jogos.size();
 				
 				listaDeJogosModel = new DefaultListModel<>();
-				String jogo, distribuidora;
+				String jogo;
 				
 				for (int i = 0; i < tamanho; i++) {
 				    jogo = jogos.get(i);
-				    distribuidora = distribuidoras.get(i);
 				    
-				    listaDeJogosModel.addElement(jogo+" - "+distribuidora);
+				    listaDeJogosModel.addElement(jogo);
 				}
 				listaDeJogos = new JList<>(listaDeJogosModel);
-				
-				/*
-		        for (String jogo : jogos) {
-		            listaDeJogosModel.addElement(jogo);
-		        }
-		        listaDeJogos = new JList<>(listaDeJogosModel);
-		        
-		        
-		        
-		        for (String distribuidora : distribuidoras) {
-		        	listaDistribuidoraModel.addElement(distribuidora);
-		        }
-		        listaDeDistribuidoras = new JList<>(listaDistribuidoraModel);
-		        */
 		        
 		        JScrollPane scrollPane = new JScrollPane(listaDeJogos);
 		        
@@ -94,7 +63,7 @@ public class TelaLoja extends JPanel {
 		            @Override
 		            public void mouseClicked(MouseEvent e) {
 		                if (e.getClickCount() == 2) {
-		                    adicionarJogoSelecionado();
+		                    adicionarJogoSelecionado(frame, tabs, biblioteca);
 		                }
 		            }
 		        });
@@ -118,11 +87,17 @@ public class TelaLoja extends JPanel {
         add(boasVindasLabel, BorderLayout.NORTH);
     }
 
-    private void adicionarJogoSelecionado() {
+    private void adicionarJogoSelecionado(VaporFrame frame, JTabbedPane tabs, TelaBiblioteca biblioteca) {
         String jogoSelecionado = listaDeJogos.getSelectedValue();
         if (jogoSelecionado != null) {
-            telaBiblioteca.adicionarJogo(jogoSelecionado); // Adicione o jogo à biblioteca
-            JOptionPane.showMessageDialog(null, "O jogo '" + jogoSelecionado + "' foi adicionado à sua biblioteca.");
+        	TelaJogoComprar telaComprar = new TelaJogoComprar(Integer.parseInt(jogoId.get(jogoSelecionado)), frame, tabs, biblioteca);
+        	frame.setContentPane(telaComprar);
+        	telaComprar.setVisible(true);
+        	tabs.setVisible(false);
+        	frame.invalidate();
+        	frame.validate();
+        	frame.repaint();
+        	
         } else {
             JOptionPane.showMessageDialog(null, "Selecione um jogo para adicionar à biblioteca.");
         }

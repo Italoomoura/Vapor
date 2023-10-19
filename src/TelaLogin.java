@@ -1,3 +1,5 @@
+package tela;
+
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.sql.Connection;
@@ -166,7 +168,6 @@ public class TelaLogin extends javax.swing.JFrame {
         String userText = userInput.getText();
         String senhaText = senhaInput.getText();
         if(sqlLogin(userText, senhaText)) {
-            //this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         	this.dispose();
             vaporFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             vaporFrame.setVisible(true);

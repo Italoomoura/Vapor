@@ -1,3 +1,5 @@
+package tela;
+
 import javax.swing.*;
 
 
@@ -11,4 +13,3 @@ public class Vapor {
         });
     }
 }
-

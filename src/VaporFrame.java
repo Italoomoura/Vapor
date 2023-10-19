@@ -1,3 +1,5 @@
+package tela;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -6,12 +8,13 @@ public class VaporFrame extends JFrame {
 
     public VaporFrame() {
         setTitle("Vapor");
-        setPreferredSize(new Dimension(800, 500));
+        setPreferredSize(new Dimension(800, 535));
+        setResizable(false);
 
         tabbedPane = new JTabbedPane();
 
         TelaBiblioteca telaBiblioteca = new TelaBiblioteca();
-        TelaLoja telaLoja = new TelaLoja(telaBiblioteca); // Passa a instância de TelaBiblioteca para TelaLoja
+        TelaLoja telaLoja = new TelaLoja(this, tabbedPane, telaBiblioteca); // Passa a instância de TelaBiblioteca para TelaLoja
 
         tabbedPane.addTab("Loja", telaLoja);
         tabbedPane.addTab("Biblioteca", telaBiblioteca); // Usa a mesma instância para a tela da biblioteca
