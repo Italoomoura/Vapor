@@ -1,5 +1,3 @@
-package tela;
-
 import java.awt.Image;
 import java.sql.Connection;
 import java.sql.DriverManager;
