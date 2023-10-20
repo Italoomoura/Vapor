@@ -1,4 +1,5 @@
 import java.awt.Image;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -171,15 +172,18 @@ public class TelaJogoComprar extends javax.swing.JPanel {
 	            		gameDescontoLabel.setVisible(false);
 	            	}
 	            	
-	            	if(resultado.getBlob("capa") != null) {
-	            		byte[] bytesImg = resultado.getBytes("capa");
-		            	ImageIcon iconImg = new ImageIcon(bytesImg);
-		            	Image imageImg = iconImg.getImage();
-		            	Image finalImg = imageImg.getScaledInstance(240, 400, Image.SCALE_SMOOTH);
-		            	ImageIcon capa = new ImageIcon(finalImg);
-		            	gameImageLabel.setIcon(capa);
-		            	gameImageLabel.setVisible(true);
+	            	String caminhoImagem = resultado.getString("caminhoImagem");
+	            	if (caminhoImagem != null && !caminhoImagem.isEmpty()) {
+	            	    ImageIcon iconImg = new ImageIcon(caminhoImagem);
+	            	    Image imageImg = iconImg.getImage();
+	            	    Image finalImg = imageImg.getScaledInstance(240, 400, Image.SCALE_SMOOTH);
+	            	    ImageIcon capa = new ImageIcon(finalImg);
+	            	    gameImageLabel.setIcon(capa);
+	            	    gameImageLabel.setVisible(true);
+	            	} else {
+	            	    gameImageLabel.setVisible(false); // Esconde a label se o caminho da imagem estiver vazio
 	            	}
+
 	            	
 	            	return resultado.getString("nomeGame");
 	            }
@@ -214,7 +218,6 @@ public class TelaJogoComprar extends javax.swing.JPanel {
 
     private void buttonComprarActionPerformed(java.awt.event.ActionEvent evt, TelaBiblioteca biblioteca, String nomeGame) {                                              
         biblioteca.adicionarJogo(nomeGame);
-        JOptionPane.showMessageDialog(this, "O jogo " + nomeGame + " foi adicionado à sua biblioteca!");
     }                                             
 
     private void buttonVoltarActionPerformed(java.awt.event.ActionEvent evt, VaporFrame frame, JTabbedPane tabs) {                                             
