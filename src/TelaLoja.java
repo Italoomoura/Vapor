@@ -76,9 +76,8 @@ public class TelaLoja extends JPanel {
 	        return;
 	    } 
 		
-		
-
-        
+		String nome = TelaLogin.getUserName();
+		System.out.println(nome);
 
         JLabel boasVindasLabel = new JLabel("<html><center>Bem-vindo à Vapor!<br>Para adicionar jogos à sua biblioteca, clique duas vezes no jogo desejado.</center></html>");
         boasVindasLabel.setHorizontalAlignment(SwingConstants.CENTER);

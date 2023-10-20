@@ -14,8 +14,10 @@ public class TelaLogin extends javax.swing.JFrame {
 	
 	private JPanel mainPanelLogin = new javax.swing.JPanel();
 	TelaCadastro telaCadastro = new TelaCadastro(this, mainPanelLogin);
+	private static String UserName;
+	
 
-    public TelaLogin(VaporFrame vaporFrame) {
+    public TelaLogin() {
     	
     	setTitle("Vapor - Login");
     	setPreferredSize(new Dimension(670, 355));
@@ -99,7 +101,7 @@ public class TelaLogin extends javax.swing.JFrame {
         buttonEntrar.setText("Entrar");
         buttonEntrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonEntrarActionPerformed(evt, vaporFrame);
+                buttonEntrarActionPerformed(evt);
             }
         });
         loginProcedurePanel.add(buttonEntrar);
@@ -162,10 +164,11 @@ public class TelaLogin extends javax.swing.JFrame {
         pack();
     }                                                                  
 
-    private void buttonEntrarActionPerformed(java.awt.event.ActionEvent evt, VaporFrame vaporFrame) {
+    private void buttonEntrarActionPerformed(java.awt.event.ActionEvent evt) {
         String userText = userInput.getText();
         String senhaText = senhaInput.getText();
         if(sqlLogin(userText, senhaText)) {
+        	VaporFrame vaporFrame = new VaporFrame();
         	this.dispose();
             vaporFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             vaporFrame.setVisible(true);
@@ -199,6 +202,7 @@ public class TelaLogin extends javax.swing.JFrame {
 	            
 	            if(resultado.next() && (resultado.getString("senha")).equals(senha)) {
 	            	JOptionPane.showMessageDialog(this, "Usuário logado com sucesso. Bem vindo " + user);
+	            	setUserName(user);
 	            }
 	            else {
 	            	labelError.setVisible(true);
@@ -237,7 +241,17 @@ public class TelaLogin extends javax.swing.JFrame {
 	    return true;
    }
                     
-    private javax.swing.JLabel bemVindoLabel;
+    public static String getUserName() {
+		return UserName;
+	}
+
+	public void setUserName(String userName) {
+		UserName = userName;
+	}
+
+
+
+	private javax.swing.JLabel bemVindoLabel;
     private javax.swing.JButton buttonEntrar;
     private javax.swing.JButton cadastroButton;
     private javax.swing.JPanel cadastro_loginPanel;
