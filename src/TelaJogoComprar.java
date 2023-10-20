@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -38,8 +39,6 @@ public class TelaJogoComprar extends javax.swing.JPanel {
         gameLancamentoLabel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
 
         gameDevLabel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        
-        String nomeGame = setComponents(idGame);
         
         buttonVoltar.setText("Voltar");
         buttonVoltar.addActionListener(new java.awt.event.ActionListener() {
@@ -131,7 +130,9 @@ public class TelaJogoComprar extends javax.swing.JPanel {
             .addGap(0, 500, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(mainPanelComprar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );	
+        );
+        
+        nomeGame = setComponents(idGame);
         
     }    
     
@@ -159,7 +160,10 @@ public class TelaJogoComprar extends javax.swing.JPanel {
 	            	gameNomeLabel.setText(resultado.getString("nomeGame"));
 	            	gameDistribuidoraLabel.setText(resultado.getString("nomeDistribuidora"));
 	            	gameDevLabel.setText(resultado.getString("nomeDev"));
-	            	gamePrecoLabel.setText("R$" + Integer.toString(resultado.getInt("preco")));
+	            	
+	            	DecimalFormat formatPreco = new DecimalFormat("#0.00");
+	            	gamePrecoLabel.setText("R$" + formatPreco.format(resultado.getDouble("preco")));
+	            	
 	            	gameLancamentoLabel.setText("Data de lançamento: " + resultado.getString("lancamento"));
 	            	gameInfoLabel.setText("<html>" + resultado.getString("info") + "<html>");
 	            	
@@ -175,9 +179,9 @@ public class TelaJogoComprar extends javax.swing.JPanel {
 		            	ImageIcon capa = new ImageIcon(finalImg);
 		            	gameImageLabel.setIcon(capa);
 		            	gameImageLabel.setVisible(true);
-		            
-		            return resultado.getString("nomeGame");
 	            	}
+	            	
+	            	return resultado.getString("nomeGame");
 	            }
 	            
 	        } 
@@ -204,6 +208,7 @@ public class TelaJogoComprar extends javax.swing.JPanel {
 	            }
 	        }
 	    }
+	    System.out.println("aqui?");
 		return "";
     }
 
@@ -231,5 +236,6 @@ public class TelaJogoComprar extends javax.swing.JPanel {
     private javax.swing.JLabel gamePrecoLabel;
     private javax.swing.JLabel gameImageLabel;
     private javax.swing.JLabel gameDevLabel;
-    private javax.swing.JPanel mainPanelComprar;                  
+    private javax.swing.JPanel mainPanelComprar; 
+    private String nomeGame;
 }
