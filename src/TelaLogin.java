@@ -168,7 +168,7 @@ public class TelaLogin extends javax.swing.JFrame {
         String userText = userInput.getText();
         String senhaText = senhaInput.getText();
         if(sqlLogin(userText, senhaText)) {
-        	VaporFrame vaporFrame = new VaporFrame();
+        	VaporFrame vaporFrame = new VaporFrame(this);
         	this.dispose();
             vaporFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             vaporFrame.setVisible(true);
