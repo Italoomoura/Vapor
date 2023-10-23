@@ -7,7 +7,7 @@ public class VaporFrame extends JFrame {
     public VaporFrame(TelaLogin login) {
     	
         setTitle("Vapor");
-        setPreferredSize(new Dimension(800, 535));
+        setPreferredSize(new Dimension(800, 550));
         setResizable(false);
 
         tabbedPane = new JTabbedPane();
@@ -15,7 +15,7 @@ public class VaporFrame extends JFrame {
         TelaBiblioteca telaBiblioteca = new TelaBiblioteca();
         TelaLoja telaLoja = new TelaLoja(this, tabbedPane, telaBiblioteca);
         @SuppressWarnings("static-access")
-	TelaPerfil telaPerfil = new TelaPerfil(login.getUserName());
+		TelaPerfil telaPerfil = new TelaPerfil(login.getUserName(), login.getID());
 
         tabbedPane.addTab("Loja", telaLoja);
         tabbedPane.addTab("Biblioteca", telaBiblioteca);
