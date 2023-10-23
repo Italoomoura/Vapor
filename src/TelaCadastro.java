@@ -1,3 +1,5 @@
+package tela;
+
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.sql.Connection;
@@ -81,7 +83,6 @@ public class TelaCadastro extends javax.swing.JPanel {
 			@Override
 			public void focusGained(FocusEvent e) {
 				if (focusTimes == 0) {
-					fieldSenhaConfirmar.setEchoChar('*');
 					fieldSenhaConfirmar.setText("");
 					focusTimes++;
 				}
@@ -100,7 +101,6 @@ public class TelaCadastro extends javax.swing.JPanel {
 			@Override
 			public void focusGained(FocusEvent e) {
 				if (focusTimes == 0) {
-					fieldSenha.setEchoChar('*');
 					fieldSenha.setText("");
 					focusTimes++;
 				}
@@ -174,7 +174,7 @@ public class TelaCadastro extends javax.swing.JPanel {
             }
         });
         
-        showPassword.setSelected(true);
+        showPassword.setSelected(false);
         showPassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showPasswordActionPerformed(evt);
@@ -219,6 +219,8 @@ public class TelaCadastro extends javax.swing.JPanel {
                 .addComponent(buttonVoltar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+        fieldSenha.setEchoChar((char)0);
+        fieldSenhaConfirmar.setEchoChar((char)0);
     }                                                      
 
     private void buttonVoltarActionPerformed(java.awt.event.ActionEvent evt, TelaLogin telaLogin, JPanel loginPanel) {                                             
@@ -229,7 +231,7 @@ public class TelaCadastro extends javax.swing.JPanel {
     	this.repaint();
     }                                            
 
-    private int buttonConfirmarCadastroActionPerformed(java.awt.event.ActionEvent evt, TelaLogin telaLogin, JPanel loginPanel) {  
+    private boolean buttonConfirmarCadastroActionPerformed(java.awt.event.ActionEvent evt, TelaLogin telaLogin, JPanel loginPanel) {  
     	String usuarioText = fieldUsuario.getText();
         String emailText = fieldEmail.getText();
         String senhaText = new String(fieldSenha.getPassword());
@@ -243,13 +245,13 @@ public class TelaCadastro extends javax.swing.JPanel {
         	if(valores[i].strip().length() <= 0) {
         		cadastroErrorLabel.setText("Valor inseridos são inválidos.");
     			cadastroErrorLabel.setVisible(true);
-    			return 0;
+    			return false;
         	}
         	for(int j=0; j<valoresInvalidos.length; j++) {
         		if(valores[i].equals(valoresInvalidos[j])) {
         			cadastroErrorLabel.setText("Valor inseridos são inválidos.");
         			cadastroErrorLabel.setVisible(true);
-        			return 0;
+        			return false;
         		}
         	}
         }
@@ -257,34 +259,31 @@ public class TelaCadastro extends javax.swing.JPanel {
         if (!senhaText.equals(senhaConfirmarText)) {
         	cadastroErrorLabel.setText("As senhas não coincidem.");
         	cadastroErrorLabel.setVisible(true);
-        	return 0;
+        	return false;
         }
-        
-
     
-        if(!patternMatches(emailText, confirmEmail)) {
+        if(!patternMatches(emailText, confirmEmail) || emailText.isEmpty()) {
         	cadastroErrorLabel.setText("Email inválido.");
         	cadastroErrorLabel.setVisible(true);
-        	return 0;
+        	return false;
         }
         
-        if(usuarioText.length() < 5) {
-        	cadastroErrorLabel.setText("Nome de usuário precisa de pelo menos 5 caracteres.");
+        if(usuarioText.length() < 5 || usuarioText.length() > 60 || usuarioText.isEmpty()) {
+        	cadastroErrorLabel.setText("Nome de usuário precisa de pelo menos 5 caracteres e no máximo 60.");
         	cadastroErrorLabel.setVisible(true);
-        	return 0;
+        	return false;
         }
         
-        if(senhaText.length() < 5) {
-        	cadastroErrorLabel.setText("A senha precisa de pelo menos 5 caracteres.");
+        if(senhaText.length() < 5 || senhaText.length() > 255 || senhaText.isEmpty()) {
+        	cadastroErrorLabel.setText("A senha precisa de pelo menos 5 caracteres e no máximo 255.");
         	cadastroErrorLabel.setVisible(true);
-        	return 0;
+        	return false;
         }
-        
         
         if(!sqlCadastro(usuarioText, senhaText, emailText)) {
         	cadastroErrorLabel.setText("Usuário já existe");
    		 	cadastroErrorLabel.setVisible(true);
-   		 	return 0;
+   		 	return false;
         }
         
         telaLogin.setContentPane(loginPanel);
@@ -292,7 +291,7 @@ public class TelaCadastro extends javax.swing.JPanel {
     	this.invalidate();
     	this.validate();
     	this.repaint();
-        return 1;
+        return true;
     } 
     
     private static boolean patternMatches(String emailAddress, String regexPattern) {
@@ -303,7 +302,7 @@ public class TelaCadastro extends javax.swing.JPanel {
     
     private boolean sqlCadastro(String user, String senha, String email) {
     	 Connection conexao = null;
-    	 String insertUser = "INSERT INTO users(nickname, senha, email) VALUES (?,?,?);";
+    	 String insertUser = "INSERT INTO users(nickname, senha, email, isDev) VALUES (?,?,?,?);";
     	 String selectUser = "SELECT nickname FROM users WHERE nickname = ?";
 
          try {
@@ -325,6 +324,7 @@ public class TelaCadastro extends javax.swing.JPanel {
                  insertCon.setString(1, user.trim());
                  insertCon.setString(2, senha.trim());
                  insertCon.setString(3, email.trim());
+                 insertCon.setInt(4, 0);
                  
                  insertCon.executeUpdate();
                  
