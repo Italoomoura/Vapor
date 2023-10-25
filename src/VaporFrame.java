@@ -4,10 +4,11 @@ import java.awt.*;
 public class VaporFrame extends JFrame {
     private JTabbedPane tabbedPane;
 
-    public VaporFrame(TelaLogin login) {
+    @SuppressWarnings("static-access")
+	public VaporFrame(TelaLogin login) {
     	
         setTitle("Vapor");
-        setPreferredSize(new Dimension(800, 550));
+        setPreferredSize(new Dimension(800, 570));
         setResizable(false);
 
         tabbedPane = new JTabbedPane();
@@ -16,10 +17,15 @@ public class VaporFrame extends JFrame {
         TelaLoja telaLoja = new TelaLoja(this, tabbedPane, telaBiblioteca);
         @SuppressWarnings("static-access")
 		TelaPerfil telaPerfil = new TelaPerfil(login.getUserName(), login.getID());
+        TelaDev telaDev = new TelaDev(login.getUserName(), login.getID());
 
         tabbedPane.addTab("Loja", telaLoja);
         tabbedPane.addTab("Biblioteca", telaBiblioteca);
         tabbedPane.addTab("Meu perfil", telaPerfil);
+        
+        if(TelaLogin.getIsDev() == 1) {
+        	tabbedPane.addTab("Painel Dev", telaDev);
+        }
 
         add(tabbedPane);
 
@@ -28,3 +34,4 @@ public class VaporFrame extends JFrame {
     }
     
 }
+
