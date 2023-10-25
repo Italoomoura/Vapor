@@ -1,5 +1,4 @@
 import java.awt.Image;
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,13 +7,13 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
 public class TelaJogoComprar extends javax.swing.JPanel {
 
     public TelaJogoComprar(int idGame, VaporFrame frame, JTabbedPane tabs, TelaBiblioteca biblioteca) {
     	mainPanelComprar = new javax.swing.JPanel();
+    	generoLabel = new javax.swing.JLabel();
         gameNomeLabel = new javax.swing.JLabel();
         gameDistribuidoraLabel = new javax.swing.JLabel();
         gameInfoLabel = new javax.swing.JLabel();
@@ -28,7 +27,7 @@ public class TelaJogoComprar extends javax.swing.JPanel {
 
         gameNomeLabel.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
 
-        gameDistribuidoraLabel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        gameDistribuidoraLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
         gameInfoLabel.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         gameInfoLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
@@ -37,9 +36,9 @@ public class TelaJogoComprar extends javax.swing.JPanel {
 
         gameDescontoLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
-        gameLancamentoLabel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        gameLancamentoLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
-        gameDevLabel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        gameDevLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         
         buttonVoltar.setText("Voltar");
         buttonVoltar.addActionListener(new java.awt.event.ActionListener() {
@@ -55,6 +54,11 @@ public class TelaJogoComprar extends javax.swing.JPanel {
                 buttonComprarActionPerformed(evt, biblioteca, nomeGame);
             }
         });
+        
+        gameImageLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        generoLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        generoLabel.setText("Gênero: ");
 
         javax.swing.GroupLayout mainPanelComprarLayout = new javax.swing.GroupLayout(mainPanelComprar);
         mainPanelComprar.setLayout(mainPanelComprarLayout);
@@ -69,26 +73,24 @@ public class TelaJogoComprar extends javax.swing.JPanel {
                     .addComponent(gameLancamentoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE))
                 .addGap(47, 47, 47)
                 .addGroup(mainPanelComprarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(mainPanelComprarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelComprarLayout.createSequentialGroup()
-                            .addComponent(gameDevLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(53, 53, 53))
+                    .addGroup(mainPanelComprarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(mainPanelComprarLayout.createSequentialGroup()
                             .addGroup(mainPanelComprarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(gameDistribuidoraLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(mainPanelComprarLayout.createSequentialGroup()
-                                    .addGroup(mainPanelComprarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelComprarLayout.createSequentialGroup()
-                                            .addComponent(gamePrecoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(gameDescontoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(buttonComprar, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGap(121, 121, 121))
-                                .addComponent(gameInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(63, 63, 63)))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelComprarLayout.createSequentialGroup()
+                                    .addComponent(gamePrecoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(gameDescontoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(buttonComprar, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(121, 121, 121))
+                        .addComponent(gameInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(gameNomeLabel)
                     .addGroup(mainPanelComprarLayout.createSequentialGroup()
-                        .addComponent(gameNomeLabel)
-                        .addGap(17, 17, 17))))
+                        .addGap(6, 6, 6)
+                        .addGroup(mainPanelComprarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(gameDistribuidoraLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(gameDevLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(generoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(53, 53, 53))
         );
         mainPanelComprarLayout.setVerticalGroup(
             mainPanelComprarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -99,7 +101,9 @@ public class TelaJogoComprar extends javax.swing.JPanel {
                 .addComponent(gameDevLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(gameDistribuidoraLabel)
-                .addGap(32, 32, 32)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(generoLabel)
+                .addGap(10, 10, 10)
                 .addComponent(gameInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(mainPanelComprarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -133,8 +137,7 @@ public class TelaJogoComprar extends javax.swing.JPanel {
                 .addComponent(mainPanelComprar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         
-        nomeGame = setComponents(idGame);
-        
+        nomeGame = setComponents(idGame); 
     }    
     
   
@@ -158,17 +161,27 @@ public class TelaJogoComprar extends javax.swing.JPanel {
 	            ResultSet resultado = selectCon.executeQuery();
 	            
 	            while(resultado.next()) {
-	            	gameNomeLabel.setText(resultado.getString("nomeGame"));
-	            	gameDistribuidoraLabel.setText(resultado.getString("nomeDistribuidora"));
-	            	gameDevLabel.setText(resultado.getString("nomeDev"));
-	            	
+	            	int isDesconto = resultado.getInt("isDesconto");
 	            	DecimalFormat formatPreco = new DecimalFormat("#0.00");
-	            	gamePrecoLabel.setText("R$" + formatPreco.format(resultado.getDouble("preco")));
+	            	String preco = formatPreco.format(resultado.getDouble("preco"));
+	            	
+	            	gameNomeLabel.setText(resultado.getString("nomeGame"));
+	            	gameDistribuidoraLabel.setText("Distribuidora: " + resultado.getString("nomeDistribuidora"));
+	            	gameDevLabel.setText("Desenvolvedora: " + resultado.getString("nomeDev"));
 	            	
 	            	gameLancamentoLabel.setText("Data de lançamento: " + resultado.getString("lancamento"));
 	            	gameInfoLabel.setText("<html>" + resultado.getString("info") + "<html>");
 	            	
-	            	if(resultado.getInt("isDesconto") != 1) {
+	            	generoLabel.setText("Gênero: " + resultado.getString("genero"));
+	            	
+	            	if(isDesconto == 1) {
+	            		System.out.println(Float.toString(resultado.getFloat("precoDesconto")));
+	            		gameDescontoLabel.setText(Float.toString(resultado.getFloat("precoDesconto")));
+	            		gameDescontoLabel.setVisible(true);
+	            		gamePrecoLabel.setText("<html><s>R$" + preco + "</s></html>");
+	            	}
+	            	else {
+	            		gamePrecoLabel.setText("R$" + preco);
 	            		gameDescontoLabel.setVisible(false);
 	            	}
 	            	
@@ -240,5 +253,6 @@ public class TelaJogoComprar extends javax.swing.JPanel {
     private javax.swing.JLabel gameImageLabel;
     private javax.swing.JLabel gameDevLabel;
     private javax.swing.JPanel mainPanelComprar; 
+    private javax.swing.JLabel generoLabel;
     private String nomeGame;
 }
