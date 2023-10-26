@@ -436,7 +436,12 @@ public class TelaPerfil extends javax.swing.JPanel {
 	    ImageIcon capa = new ImageIcon(finalImg);
 	    userImagem.setIcon(capa);
 	    userImagem.setVisible(true);
-	    path = "C:\\Vapor\\Profile Picture\\ " + username + ".png";
+	    String ext = arquivo.getSelectedFile().getAbsolutePath().toString().substring(path.lastIndexOf("."), path.length());
+	    path = "C:\\Vapor\\Profile Picture\\ " + username + ext;
+	    File verifyPath = new File(path);
+	    if(verifyPath.exists()) {
+	    	verifyPath.delete();
+	    }
 	    FileUtils.copyFile(arquivo.getSelectedFile(), new File(path));
     }                                        
 
