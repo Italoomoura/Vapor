@@ -1,5 +1,9 @@
-import java.awt.BorderLayout;
+package tela;
+
+import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -7,12 +11,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -52,6 +54,19 @@ public class TelaDev extends javax.swing.JPanel {
         scrollPaneList = new javax.swing.JScrollPane();
         jogosList = new javax.swing.JList<>();
 
+        jogosList.addMouseListener(new MouseAdapter() {
+        	public void mouseClicked(MouseEvent evt) {
+        		if(evt.getClickCount() == 2) {
+        			selectedJogo = jogosList.getSelectedValue();
+        			int input = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja editar o jogo: " + selectedJogo, TOOL_TIP_TEXT_KEY, JOptionPane.YES_NO_OPTION);
+        			if (input == 0) {
+        				alterarState = true;
+        				sql(2, username, id);
+        			}
+        		}
+        	}
+        });
+        
         imagemGameLabel.setMaximumSize(new java.awt.Dimension(240, 400));
         imagemGameLabel.setMinimumSize(new java.awt.Dimension(240, 400));
         imagemGameLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -145,6 +160,15 @@ public class TelaDev extends javax.swing.JPanel {
 
         infoField.setColumns(20);
         infoField.setRows(5);
+        infoField.setMaximumSize(new Dimension(200,50));
+        infoField.setMinimumSize(new Dimension(200,50));
+        infoField.setPreferredSize(new Dimension(200,50));
+        nomeField.setMaximumSize(new Dimension(170,23));
+        nomeField.setMinimumSize(new Dimension(170,23));
+        nomeField.setPreferredSize(new Dimension(170,23));
+        arquivoButton.setMaximumSize(new Dimension(170,28));
+        arquivoButton.setMinimumSize(new Dimension(170,28));
+        arquivoButton.setPreferredSize(new Dimension(170,28));
         jScrollPane3.setViewportView(infoField);
 
         errorLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -331,6 +355,9 @@ public class TelaDev extends javax.swing.JPanel {
 				+ "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		String selectGame = "SELECT nomeGame FROM games WHERE nomeGame = ?";
 		String selectGameUser = "SELECT nomeGame FROM games WHERE nomeDev = ?";
+		String selectTudo = "SELECT * FROM games WHERE nomeGame = ?";
+		String updateGame = "UPDATE games SET nomeGame = ?, nomeDistribuidora = ?, preco = ?, isDesconto = ?, download = ?, info = ?, genero = ?, "
+				+ "caminhoImagem = ?, precoDesconto = ? WHERE nomeGame = ?";
 		
 	    try {
 	        Class.forName("com.mysql.cj.jdbc.Driver");
@@ -383,7 +410,64 @@ public class TelaDev extends javax.swing.JPanel {
 		            insertCon.executeUpdate();
 				}
 				
+				if (tipo == 2) {
+					PreparedStatement selectCon = conexao.prepareStatement(selectTudo);
+					selectCon.setString(1, selectedJogo);
+					ResultSet resultado = selectCon.executeQuery();
+					
+					while (resultado.next()) {
+						nomeField.setText(resultado.getString("nomeGame"));
+						distribuidoraField.setText(resultado.getString("nomeDistribuidora"));
+						precoField.setText(Float.toString(resultado.getFloat("preco")));
+						if(resultado.getInt("isDesconto") == 1) {
+							descontoState = true;
+							descontoLabel.setVisible(descontoState);
+					        descontoField.setVisible(descontoState);
+					        descontoButton.setSelected(descontoState);
+					        descontoField.setText(Float.toString(resultado.getFloat("precoDesconto")));
+						}
+						else {
+							descontoState = false;
+							descontoLabel.setVisible(descontoState);
+					        descontoField.setVisible(descontoState);
+					        descontoButton.setSelected(descontoState);
+					        descontoField.setText("0");
+						}
+						
+						generoBox.setSelectedItem(resultado.getString("genero"));
+						ImageIcon iconImg = new ImageIcon(resultado.getString("caminhoImagem"));
+					    Image imageImg = iconImg.getImage();
+					    Image finalImg = imageImg.getScaledInstance(240, 400, Image.SCALE_SMOOTH);
+					    ImageIcon capa = new ImageIcon(finalImg);
+					    imagemGameLabel.setIcon(capa);
+					    imagemGameLabel.setVisible(true);
+					    
+						arquivoButton.setText(resultado.getString("download"));
+					    infoField.setText(resultado.getString("info"));
+					    
+					    pathImagem = resultado.getString("caminhoImagem");
+					    pathArquivo = resultado.getString("download");
+					    
+					    if(alterarState) {
+					    	lancarButton.setText("Alterar dados");
+					    }
+					}
+				}
 				
+				if (tipo == 3) {
+					PreparedStatement selectCon = conexao.prepareStatement(updateGame);
+					selectCon.setString(1, nomeText);
+					selectCon.setString(2, distribuidoraText);
+					selectCon.setFloat(3, Float.parseFloat(precoText));
+					selectCon.setInt(4, descontoState?1:0);
+					selectCon.setString(5, pathArquivo);
+					selectCon.setString(6, infoText);
+					selectCon.setString(7, generoText);
+					selectCon.setString(8, pathImagem);
+					selectCon.setFloat(9, Float.parseFloat(descontoText));
+					selectCon.setString(10, selectedJogo);
+					selectCon.executeUpdate();
+				}
 				
 	        } 
 	        
@@ -426,7 +510,7 @@ public class TelaDev extends javax.swing.JPanel {
         	return false;
         }
         
-        String confirmText = "Tem certeza que quer lançar o jogo " + nomeText + "?\n"
+        String confirmText = "Tem certeza que quer " + (alterarState?"alterar":"lançar")  +  " o jogo " + nomeText + "?\n"
         		+ "Confirme os dados:\n"
         		+ "Distribuidora: " + distribuidoraText + "\n"
         		+ "Preço: " + precoText + (descontoState?". Desconto " + descontoText:"") + "\n"
@@ -438,8 +522,29 @@ public class TelaDev extends javax.swing.JPanel {
         	return false;
         }
         
-        if(sql(1, username, id)) {
-        	JOptionPane.showMessageDialog(this, "Jogo " + nomeText + " lançado com sucesso.");
+        if(!alterarState) {
+            if(sql(1, username, id)) {
+            	JOptionPane.showMessageDialog(this, "Jogo " + nomeText + " lançado com sucesso.");
+            }
+        }
+        else {
+        	if(sql(3, username, id)) {
+            	JOptionPane.showMessageDialog(this, "Jogo " + nomeText + " alterado com sucesso.");
+            }
+        	alterarState = false;
+        	lancarButton.setText("Lançar");
+        	nomeField.setText("");
+        	distribuidoraField.setText("");
+        	precoField.setText("");
+        	descontoField.setText("");
+        	generoBox.setSelectedItem("Tiro");
+        	infoField.setText("");
+        	descontoButton.setSelected(false);
+        	descontoState = false;
+        	descontoField.setVisible(false);
+        	descontoLabel.setVisible(false);
+        	imagemGameLabel.setIcon(null);
+        	arquivoButton.setText("Importar");
         }
         
         return true;
@@ -529,6 +634,7 @@ public class TelaDev extends javax.swing.JPanel {
     private javax.swing.JPanel panelList;
     
     private boolean descontoState = false;
+    private boolean alterarState = false;
     private String pathImagem = "";
     private String pathArquivo = "";
     
@@ -543,4 +649,5 @@ public class TelaDev extends javax.swing.JPanel {
     
     private String username;
     private int id;
+    private String selectedJogo;
 }
