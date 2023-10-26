@@ -1,7 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -15,6 +21,12 @@ public class TelaBiblioteca extends JPanel {
     private DefaultListModel<String> bibliotecaModel;
     private JList<String> listaBiblioteca;
     private int idUser;
+    private JPanel gameInfoPanel;
+    private JLabel gameTitleLabel;
+    private JLabel gameDescriptionLabel;
+    private JLabel gameImageLabel;
+    private JButton playButton;
+
 
     public TelaBiblioteca() {
         setLayout(new BorderLayout());
@@ -26,13 +38,62 @@ public class TelaBiblioteca extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
                     removerJogoSelecionado();
-                }
+                } 
             }
         });
 
         JLabel boasVindasLabel = new JLabel("<html><center>Sua Biblioteca de Jogos<br>Clique duas vezes em um jogo para removê-lo.</center></html>");
         boasVindasLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(boasVindasLabel, BorderLayout.NORTH);
+        
+        gameInfoPanel = new JPanel();
+        gameInfoPanel.setLayout(new BorderLayout());
+        gameInfoPanel.setPreferredSize(new Dimension(600, 0));
+
+        gameTitleLabel = new JLabel();
+        gameTitleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        
+        gameImageLabel = new JLabel();
+        
+        JPanel titleImagePanel = new JPanel();
+        titleImagePanel.setLayout(new BorderLayout());
+        titleImagePanel.add(gameTitleLabel, BorderLayout.NORTH);
+        titleImagePanel.add(gameImageLabel, BorderLayout.CENTER);
+                
+        gameInfoPanel.add(titleImagePanel, BorderLayout.NORTH);
+
+        gameDescriptionLabel = new JLabel();
+        gameDescriptionLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+
+
+        playButton = new JButton("Jogar");
+        playButton.setPreferredSize(new Dimension(120, 40));
+        playButton.setEnabled(false);
+        playButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                abrirJogo();
+            }
+        });
+        
+        JPanel descriptionAndButtonPanel = new JPanel();
+        descriptionAndButtonPanel.setLayout(new BorderLayout());
+        descriptionAndButtonPanel.add(gameDescriptionLabel, BorderLayout.CENTER);
+        descriptionAndButtonPanel.add(playButton, BorderLayout.SOUTH);
+        
+        JPanel titleImageDescriptionButtonPanel = new JPanel();
+        titleImageDescriptionButtonPanel.setLayout(new BorderLayout());
+        titleImageDescriptionButtonPanel.add(gameTitleLabel, BorderLayout.NORTH);
+        titleImageDescriptionButtonPanel.add(gameImageLabel, BorderLayout.CENTER);
+        titleImageDescriptionButtonPanel.add(descriptionAndButtonPanel, BorderLayout.EAST);
+        
+        gameInfoPanel.add(titleImageDescriptionButtonPanel, BorderLayout.NORTH);
+        
+        JScrollPane scrollPane = new JScrollPane(gameInfoPanel);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        add(scrollPane, BorderLayout.EAST);
     }
     
     public void loadGames() {
@@ -93,15 +154,121 @@ public class TelaBiblioteca extends JPanel {
 				JScrollPane scrollPane = new JScrollPane(listaBiblioteca);
 		        add(scrollPane, BorderLayout.CENTER);
 	        }
-		}
-		catch(SQLException e) {
-			System.out.println("Erro ao conectar ao SQL Server: " + e.getMessage());
-	        return;
-		}
-		catch (ClassNotFoundException e) {
-	        System.out.println("Driver JDBC não encontrado: " + e.getMessage());
-	        return;
-	    } 
+		} catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (conexao != null) {
+                try {
+                    conexao.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        listaBiblioteca.addListSelectionListener(e -> showGameInfo());
+    }
+    
+    public void showGameInfo() {
+        int selectedIndex = listaBiblioteca.getSelectedIndex();
+
+        if (selectedIndex != -1) {
+            String jogoSelecionado = bibliotecaModel.getElementAt(selectedIndex);
+
+            Connection conexao = null;
+            String selectGameInfo = "SELECT * FROM games WHERE nomeGame = ?";
+
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                String url = "jdbc:mysql://localhost/vapor";
+                conexao = DriverManager.getConnection(url, "root", "root");
+
+                if (conexao != null) {
+                    PreparedStatement selectConGameInfo = conexao.prepareStatement(selectGameInfo);
+                    selectConGameInfo.setString(1, jogoSelecionado);
+                    ResultSet resultGameInfo = selectConGameInfo.executeQuery();
+
+                    if (resultGameInfo.next()) {
+                        String descricao = resultGameInfo.getString("info");
+                        String nome = resultGameInfo.getString("nomeGame");
+                        gameTitleLabel.setText(nome);
+                        
+                        String caminhoImagem = resultGameInfo.getString("caminhoImagem");
+    	            	if (caminhoImagem != null && !caminhoImagem.isEmpty()) {
+    	            	    ImageIcon iconImg = new ImageIcon(caminhoImagem);
+    	            	    Image imageImg = iconImg.getImage();
+    	            	    Image finalImg = imageImg.getScaledInstance(240, 400, Image.SCALE_SMOOTH);
+    	            	    ImageIcon capa = new ImageIcon(finalImg);
+    	            	    gameImageLabel.setIcon(capa);
+    	            	    gameImageLabel.setVisible(true);
+    	            	} else {
+    	            	    gameImageLabel.setVisible(false);
+    	            	}
+    	            	
+                        gameDescriptionLabel.setText("<html>" + descricao + "</html>");
+                        playButton.setEnabled(true);
+                    }
+                }
+            } catch (ClassNotFoundException | SQLException e) {
+                e.printStackTrace();
+            } finally {
+                if (conexao != null) {
+                    try {
+                        conexao.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    public void abrirJogo() {
+        int selectedIndex = listaBiblioteca.getSelectedIndex();
+
+        if (selectedIndex != -1) {
+            String jogoSelecionado = bibliotecaModel.getElementAt(selectedIndex);
+            Connection conexao = null;
+            String selectCaminhoArquivo = "SELECT download FROM games WHERE nomeGame = ?";
+
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                String url = "jdbc:mysql://localhost/vapor";
+                conexao = DriverManager.getConnection(url, "root", "root");
+
+                if (conexao != null) {
+                    PreparedStatement selectCaminhoStmt = conexao.prepareStatement(selectCaminhoArquivo);
+                    selectCaminhoStmt.setString(1, jogoSelecionado);
+                    ResultSet resultado = selectCaminhoStmt.executeQuery();
+
+                    if (resultado.next()) {
+                        String caminhoArquivo = resultado.getString("download");
+                        try {
+                            File arquivo = new File(caminhoArquivo);
+                            System.out.println(caminhoArquivo);
+
+                            if (arquivo.exists()) {
+                                Desktop.getDesktop().open(arquivo);
+                            } else {
+                                System.out.println("O arquivo não foi encontrado.");
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            } catch (ClassNotFoundException | SQLException e) {
+                e.printStackTrace();
+            } finally {
+                if (conexao != null) {
+                    try {
+                        conexao.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
     public void adicionarJogo(String jogo) {
@@ -244,6 +411,7 @@ public class TelaBiblioteca extends JPanel {
             }
         }
     }
+    
 
 
 }

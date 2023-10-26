@@ -34,4 +34,3 @@ public class VaporFrame extends JFrame {
     }
     
 }
-
