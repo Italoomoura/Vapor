@@ -589,7 +589,13 @@ public class TelaDev extends javax.swing.JPanel {
         String path = arquivo.getSelectedFile().getAbsoluteFile().toString();
         String ext = path.substring(path.lastIndexOf("."), path.length());
         
-        FileUtils.copyFile(arquivo.getSelectedFile(), new File("C:\\Vapor\\Game Picture\\ " + nomeGame + ext));
+        File file = new File("C:\\Vapor\\Game Picture\\ " + nomeGame + ext);
+        
+        if (file.exists()) {
+        	file.delete();
+        }
+        
+        FileUtils.copyFile(arquivo.getSelectedFile(), file);
     	pathImagem = "C:\\Vapor\\Game Picture\\ " + nomeGame + ext;
     	
     	ImageIcon iconImg = new ImageIcon(pathImagem);
