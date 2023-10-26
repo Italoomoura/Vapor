@@ -15,6 +15,8 @@ public class TelaLogin extends javax.swing.JFrame {
 	private JPanel mainPanelLogin = new javax.swing.JPanel();
 	TelaCadastro telaCadastro = new TelaCadastro(this, mainPanelLogin);
 	private static String UserName;
+	private static int UserID;
+	private static int isDev;
 	
 
     public TelaLogin() {
@@ -185,7 +187,7 @@ public class TelaLogin extends javax.swing.JFrame {
     
     private boolean sqlLogin(String user, String senha) {
 		Connection conexao = null;
-		String selectUser = "SELECT nickname, senha FROM users WHERE nickname = ?";
+		String selectUser = "SELECT idUser, nickname, senha, isDev FROM users WHERE nickname = ?";
 	
 	    try {
 	        Class.forName("com.mysql.cj.jdbc.Driver");
@@ -203,6 +205,8 @@ public class TelaLogin extends javax.swing.JFrame {
 	            if(resultado.next() && (resultado.getString("senha")).equals(senha)) {
 	            	JOptionPane.showMessageDialog(this, "Usuário logado com sucesso. Bem vindo " + user);
 	            	setUserName(user);
+	            	setID(resultado.getInt("idUser"));
+	            	setIsDev(resultado.getInt("isDev"));
 	            }
 	            else {
 	            	labelError.setVisible(true);
@@ -247,6 +251,22 @@ public class TelaLogin extends javax.swing.JFrame {
 
 	public void setUserName(String userName) {
 		UserName = userName;
+	}
+	
+	public static int getID() {
+		return UserID;
+	}
+	
+	public void setID(int userId) {
+		UserID = userId;
+	}
+	
+	public static int getIsDev() {
+		return isDev;
+	}
+
+	public static void setIsDev(int isDev) {
+		TelaLogin.isDev = isDev;
 	}
 
 
