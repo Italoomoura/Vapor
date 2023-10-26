@@ -1,4 +1,6 @@
 import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,6 +11,8 @@ import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
+import org.apache.commons.io.FileUtils;
 
 public class TelaPerfil extends javax.swing.JPanel {
 
@@ -172,7 +176,12 @@ public class TelaPerfil extends javax.swing.JPanel {
         buttonAlterarFoto.setText("Alterar foto");
         buttonAlterarFoto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonAlterarFotoActionPerformed(evt, username, ID);
+                try {
+					buttonAlterarFotoActionPerformed(evt, username, ID);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         });
 
@@ -415,7 +424,7 @@ public class TelaPerfil extends javax.swing.JPanel {
 	    return true;
     }                                                                                                                                                                                            
 
-    private void buttonAlterarFotoActionPerformed(java.awt.event.ActionEvent evt, String username, int id) {                                         
+    private void buttonAlterarFotoActionPerformed(java.awt.event.ActionEvent evt, String username, int id) throws IOException {                                         
         JFileChooser arquivo = new JFileChooser();
         arquivo.showDialog(this, "Escolha seu arquivo de imagem.");
         arquivo.setVisible(true);
@@ -427,7 +436,8 @@ public class TelaPerfil extends javax.swing.JPanel {
 	    ImageIcon capa = new ImageIcon(finalImg);
 	    userImagem.setIcon(capa);
 	    userImagem.setVisible(true);
-        
+	    path = "C:\\Vapor\\Profile Picture\\ " + username + ".txt";
+	    FileUtils.copyFile(arquivo.getSelectedFile(), new File(path));
     }                                        
 
     private void buttonAlterarDadosActionPerformed(java.awt.event.ActionEvent evt) {
@@ -563,5 +573,5 @@ public class TelaPerfil extends javax.swing.JPanel {
     private javax.swing.JRadioButton radioButtonSenha;
 	private boolean stateButtonDados = false;
 	private boolean stateButtonDev = false;
-	private String path;;
+	private String path;
 }
