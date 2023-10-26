@@ -440,7 +440,8 @@ public class TelaDev extends javax.swing.JPanel {
 					    imagemGameLabel.setIcon(capa);
 					    imagemGameLabel.setVisible(true);
 					    
-						arquivoButton.setText(resultado.getString("download"));
+					    String patharq = resultado.getString("download");
+						arquivoButton.setText(patharq.substring(patharq.lastIndexOf("."), patharq.length()));
 					    infoField.setText(resultado.getString("info"));
 					    
 					    pathImagem = resultado.getString("caminhoImagem");
