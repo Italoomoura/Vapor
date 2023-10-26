@@ -1,0 +1,212 @@
+Participantes:
+Gustavo de Godoy Moreira - G5462H3
+Ítalo de Moura Santos - G459377
+
+1)
+#include <stdio.h>
+#include <locale.h>
+#include <malloc.h>
+
+void soma(int v1[], int v2[], int t){
+	int i;
+	for(i=0;i<t;i++){
+		v1[i] += v2[i];
+	}
+}
+
+main(){
+	int i, n;
+	setlocale(LC_ALL, "");
+	do{
+		printf("Tamanho vetor: ");
+		scanf("%d", &n);
+	}while(n<=0);
+	int* v1 = (int*)malloc(n*sizeof(int));
+	int* v2 = (int*)malloc(n*sizeof(int));
+	for (i=0; i<n;i++){
+		printf("Valor de v1[%d]: ", i);
+		scanf("\n%d", &v1[i]);
+		
+		printf("Valor de v2[%d]: ", i);
+		scanf("\n%d", &v2[i]);
+	}
+	
+	soma(v1,v2,n);
+	
+	for (i=0;i<n;i++){
+		printf("\n v1[%d] + v2[%d]: %d", i, i, v1[i]);
+	}
+	printf("\n");
+	system("pause");
+}
+
+2)
+#include <stdio.h>
+#include <locale.h>
+#include <malloc.h>
+
+void bubble_sort(char* v, int t){
+	int i, j, aux;
+	for (i=t-1;i>0;i--){
+		for (j=0;j<i;j++){
+			if (v[j] < v[j+1]){
+				aux = v[j];
+				v[j] = v[j+1];
+				v[j+1] = aux;
+			}
+		}
+	}
+}
+
+main(){
+	int i, q;
+	setlocale(LC_ALL,"");
+	do{
+		printf("Quantas letras: ");
+		scanf("%d", &q);
+	}while(q<=0);
+	char* v = malloc(q*sizeof(char));
+	for(i=0;i<q;i++){
+		do{
+			printf("Letra %i: ", i+1);
+			scanf("\n%c", &v[i]);
+		}while(v[i]<97 || v[i]>122);
+	}
+
+	bubble_sort(v, q);
+	
+	printf("%s", v);
+	
+}
+
+3)
+#include <stdio.h>
+#include <locale.h>
+#include <malloc.h>
+#include <time.h>
+#include <stdlib.h>
+
+main(){
+	int i, j, n, *ci;
+	setlocale(LC_ALL, "");
+	do{
+		printf("Número de linhas: ");
+		scanf("%d", &n);
+	}while(n<=0);
+	
+	int** l = (int**)malloc(n*sizeof(int));
+	
+	srand(time(NULL));
+	ci = (int*)malloc(n*sizeof(int) + 1);
+	
+	for (i=0;i<n;i++){
+		int c = rand() % 10 + 2;
+		ci[i] = c;
+		l[i] = (int*)malloc(c*sizeof(int));
+	}
+	
+	printf("\n");
+	
+	for(i=0;i<n;i++){
+		l[i][0] = ci[i];
+		printf("\nElementos nessa linha: %d \t | \t ", l[i][0]-1);
+		for(j=1;j<ci[i];j++){
+			l[i][j] = 0;
+			printf("%d", l[i][j]);
+		}
+	}
+	printf("\n");
+	system("pause");
+}
+
+4)
+#include <stdio.h>
+#include <locale.h>
+#include <malloc.h>
+#include <string.h>
+
+struct aluno {
+	int RA;
+	char nome[50];
+	float np1[6], np2[6], media[6];
+};
+
+void calcula_media(struct aluno *a, float *np1, float *np2){
+	int j;
+	for (j=0;j<6;j++){
+		(*a).media[j] = ((*a).np1[j] + (*a).np2[j])/2;
+	}
+}
+
+main(){
+	int i, j, q, c;
+	char resposta;
+	
+	setlocale(LC_ALL, "");
+	do{
+		printf("Deseja criar quantos alunos: ");
+		scanf("%d", &q);
+	}while(q<=0);
+	
+	struct aluno *a = (struct aluno*)malloc(q*sizeof(struct aluno));
+	
+	for (i=0; i<q; i++){
+		printf("\nRA do aluno: ");
+		scanf("%d", &a[i].RA);
+		printf("\nNome do aluno: ");
+		fflush(stdin);
+		fgets(a[i].nome, sizeof(a[i].nome), stdin);
+		for (j=0; j<6; j++){
+			do{
+				printf("\nNP1 -> Disciplina %d: ", j+1);
+				scanf("%f", &a[i].np1[j]);
+				printf("\nNP2 -> Disciplina %d: ", j+1);
+				scanf("%f", &a[i].np2[j]);	
+			}
+			while((a[i].np1[j] < 0 || a[i].np1[j] > 10) || (a[i].np2[j] < 0 || a[i].np2[j] > 10));
+		}
+		printf("\n--------------------------------------");
+		if (i<q-1){
+			printf("\nNovo aluno...\n");
+		}
+	}
+	
+	for(i=0; i<q; i++){
+		calcula_media(&a[i], a[i].np1, a[i].np2);
+	}
+	
+	do {
+		while(1){
+			int exist = 0, vRA;
+			printf("\nDigite o RA do aluno que deseja ver: ");
+			scanf("%d", &vRA);
+			for(i=0;i<q;i++){
+				if(vRA == a[i].RA){
+					printf("\nRA do aluno: %d", a[i].RA);
+					printf("\nNome do aluno: %s", a[i].nome);
+					for(j=0; j<6; j++){
+						printf("\nMedia do aluno na disciplina %d: %f", j+1, a[i].media[j]);
+					}
+					exist = 1;
+				}
+			}
+			if(exist){
+				break;
+			}
+			else{
+				printf("RA inexistente, tente novamente.");
+			}
+		}
+		
+		printf("\nDeseja ver algum aluno(s/n): ");
+		fflush(stdin);
+		resposta = getchar();
+			
+	}while(resposta == 115);
+	
+	printf("\n");
+	system("pause");
+}
+
+
+
