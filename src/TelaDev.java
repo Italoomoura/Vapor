@@ -348,7 +348,7 @@ public class TelaDev extends javax.swing.JPanel {
     	return true;
     }
     
-    private boolean sql(int tipo, String username, int id) {
+private boolean sql(int tipo, String username, int id) {
     	
     	Connection conexao = null;
 		String insertGame = "INSERT INTO games (nomeGame, nomeDistribuidora, nomeDev, preco, precoDesconto, lancamento, isDesconto, download, info, genero, caminhoImagem) VALUES"
@@ -374,10 +374,14 @@ public class TelaDev extends javax.swing.JPanel {
 					
 					while(resultado.next()) {
 						listaDeJogos.addElement(resultado.getString("nomeGame"));
+						System.out.println(resultado.getString("nomeGame"));
 					}
 										
 					jogosList.setModel(listaDeJogos);
 					scrollPaneList.setViewportView(jogosList);
+					scrollPaneList.invalidate();
+					scrollPaneList.revalidate();
+					scrollPaneList.repaint();
 	            }
 	            
 				if (tipo == 1) {
@@ -525,30 +529,31 @@ public class TelaDev extends javax.swing.JPanel {
         if(!alterarState) {
             if(sql(1, username, id)) {
             	JOptionPane.showMessageDialog(this, "Jogo " + nomeText + " lançado com sucesso.");
-            	telaLoja.atualizarListaDeJogos();
             }
         }
         else {
         	if(sql(3, username, id)) {
             	JOptionPane.showMessageDialog(this, "Jogo " + nomeText + " alterado com sucesso.");
-            	telaLoja.atualizarListaDeJogos();
             }
-        	alterarState = false;
-        	lancarButton.setText("Lançar");
-        	nomeField.setText("");
-        	distribuidoraField.setText("");
-        	precoField.setText("");
-        	descontoField.setText("");
-        	generoBox.setSelectedItem("Tiro");
-        	infoField.setText("");
-        	descontoButton.setSelected(false);
-        	descontoState = false;
-        	descontoField.setVisible(false);
-        	descontoLabel.setVisible(false);
-        	imagemGameLabel.setIcon(null);
-        	arquivoButton.setText("Importar");
         }
         
+    	alterarState = false;
+    	lancarButton.setText("Lançar");
+    	nomeField.setText("");
+    	distribuidoraField.setText("");
+    	precoField.setText("");
+    	descontoField.setText("");
+    	generoBox.setSelectedItem("Tiro");
+    	infoField.setText("");
+    	descontoButton.setSelected(false);
+    	descontoState = false;
+    	descontoField.setVisible(false);
+    	descontoLabel.setVisible(false);
+    	imagemGameLabel.setIcon(null);
+    	arquivoButton.setText("Importar");
+        
+    	sql(0, username, id);
+    	telaLoja.atualizarListaDeJogos();
         return true;
     }                                            
 
