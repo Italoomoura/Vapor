@@ -309,13 +309,12 @@ public class TelaPerfil extends javax.swing.JPanel {
 		            	userNomeLabel.setText(resultado.getString("nickname"));
 		            	userEmailLabel.setText(resultado.getString("email"));
 		            	userIdadeLabel.setText("Idade: " + Integer.toString(resultado.getInt("Idade")));
-		            	
 		            	textFieldNome.setText(resultado.getString("nickname"));
 		            	textFieldEmail.setText(resultado.getString("email"));
 		            	textFieldIdade.setText(Integer.toString(resultado.getInt("idade")));
 		            	textFieldSenha.setText(resultado.getString("senha"));
 		            	textFieldSenha.setEchoChar('*');
-		            	textFieldSenhaConfirmar.setEchoChar((char)0);
+		            	textFieldSenhaConfirmar.setEchoChar('*');
 		            	
 		            	if(resultado.getInt("isDev") == 0) {
 		            		stateButtonDev = false;
@@ -348,15 +347,24 @@ public class TelaPerfil extends javax.swing.JPanel {
 						return false;
 					}
 					
+					String nomeUser, idade, email;
+					nomeUser = textFieldNome.getText().trim();
+					idade = textFieldIdade.getText().trim();
+					email = textFieldEmail.getText().trim();
+					
 					PreparedStatement updateCon = conexao.prepareStatement(updateUsers);
 					String senhaText = new String(textFieldSenha.getPassword());
 					updateCon.setString(1, senhaText.trim());
-					updateCon.setString(2, textFieldNome.getText().trim());
-					updateCon.setInt(3, Integer.parseInt(textFieldIdade.getText().trim()));
-					updateCon.setString(4, textFieldEmail.getText().trim());
+					updateCon.setString(2, nomeUser);
+					updateCon.setInt(3, Integer.parseInt(idade));
+					updateCon.setString(4, email);
 					updateCon.setInt(5, ID);
-		            updateCon.executeUpdate();
-		            return true;
+		            		updateCon.executeUpdate();
+		            
+		            		userNomeLabel.setText(nomeUser);
+	               			userIdadeLabel.setText("Idade: " + idade);
+	                		userEmailLabel.setText(email);
+		            		return true;
 				}
 				
 				if (tipo == 2) {
@@ -576,7 +584,7 @@ public class TelaPerfil extends javax.swing.JPanel {
     private javax.swing.JLabel userNomeLabel;
     private javax.swing.JLabel errorLabel;
     private javax.swing.JRadioButton radioButtonSenha;
-	private boolean stateButtonDados = false;
-	private boolean stateButtonDev = false;
-	private String path;
+    private boolean stateButtonDados = false;
+    private boolean stateButtonDev = false;
+    private String path;
 }
