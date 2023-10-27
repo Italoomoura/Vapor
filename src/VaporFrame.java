@@ -17,7 +17,7 @@ public class VaporFrame extends JFrame {
         TelaLoja telaLoja = new TelaLoja(this, tabbedPane, telaBiblioteca);
         @SuppressWarnings("static-access")
 		TelaPerfil telaPerfil = new TelaPerfil(login.getUserName(), login.getID());
-        TelaDev telaDev = new TelaDev(login.getUserName(), login.getID());
+        TelaDev telaDev = new TelaDev(login.getUserName(), login.getID(), telaLoja);
 
         tabbedPane.addTab("Loja", telaLoja);
         tabbedPane.addTab("Biblioteca", telaBiblioteca);

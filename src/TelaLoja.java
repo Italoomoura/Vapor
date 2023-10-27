@@ -83,6 +83,41 @@ public class TelaLoja extends JPanel {
         boasVindasLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(boasVindasLabel, BorderLayout.NORTH);
     }
+    
+    void atualizarListaDeJogos() {
+        listaDeJogosModel.clear(); 
+
+        Connection conexao = null;
+        String selectGame = "SELECT * FROM games";
+        
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String url = "jdbc:mysql://localhost/vapor";
+            conexao = DriverManager.getConnection(url, "root", "root");
+
+            if (conexao != null) {
+                PreparedStatement selectCon = conexao.prepareStatement(selectGame);
+                ResultSet resultCon = selectCon.executeQuery(selectGame);
+
+                ArrayList<String> jogos = new ArrayList<String>();
+
+                while (resultCon.next()) {
+                    jogos.add(resultCon.getString("nomeGame"));
+                    jogoId.put(resultCon.getString("nomeGame"), Integer.toString(resultCon.getInt("idGame")));
+                }
+
+                for (String jogo : jogos) {
+                    listaDeJogosModel.addElement(jogo);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao conectar ao SQL Server: " + e.getMessage());
+            return;
+        } catch (ClassNotFoundException e) {
+            System.out.println("Driver JDBC não encontrado: " + e.getMessage());
+            return;
+        }
+    }
 
     private void adicionarJogoSelecionado(VaporFrame frame, JTabbedPane tabs, TelaBiblioteca biblioteca) {
         String jogoSelecionado = listaDeJogos.getSelectedValue();

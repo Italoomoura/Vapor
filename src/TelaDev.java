@@ -20,8 +20,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.commons.io.FileUtils;
 
 public class TelaDev extends javax.swing.JPanel {
-
-    public TelaDev(String username, int id) {
+	private TelaLoja telaLoja;
+	
+    public TelaDev(String username, int id, TelaLoja telaLoja) {
+    	this.telaLoja = telaLoja;
     	this.username = username;
     	this.id = id;
     	
@@ -523,11 +525,13 @@ public class TelaDev extends javax.swing.JPanel {
         if(!alterarState) {
             if(sql(1, username, id)) {
             	JOptionPane.showMessageDialog(this, "Jogo " + nomeText + " lançado com sucesso.");
+            	telaLoja.atualizarListaDeJogos();
             }
         }
         else {
         	if(sql(3, username, id)) {
             	JOptionPane.showMessageDialog(this, "Jogo " + nomeText + " alterado com sucesso.");
+            	telaLoja.atualizarListaDeJogos();
             }
         	alterarState = false;
         	lancarButton.setText("Lançar");
