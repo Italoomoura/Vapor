@@ -4,9 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -26,10 +24,14 @@ public class TelaBiblioteca extends JPanel {
     private JLabel gameDescriptionLabel;
     private JLabel gameImageLabel;
     private JButton playButton;
+    private TelaPerfil perfil;
+    private int id;
 
 
-    public TelaBiblioteca() {
+    public TelaBiblioteca(TelaPerfil perfil, int id) {
         setLayout(new BorderLayout());
+        this.setPerfil(perfil);
+        this.setId(id);
 
         loadGames();
 
@@ -195,6 +197,7 @@ public class TelaBiblioteca extends JPanel {
                         
                         String caminhoImagem = resultGameInfo.getString("caminhoImagem");
     	            	if (caminhoImagem != null && !caminhoImagem.isEmpty()) {
+    	            		System.out.println("cu");
     	            	    ImageIcon iconImg = new ImageIcon(caminhoImagem);
     	            	    Image imageImg = iconImg.getImage();
     	            	    Image finalImg = imageImg.getScaledInstance(240, 400, Image.SCALE_SMOOTH);
@@ -318,6 +321,7 @@ public class TelaBiblioteca extends JPanel {
                         listaBiblioteca.revalidate();
                         
                         JOptionPane.showMessageDialog(this, "O jogo " + jogo + " foi adicionado à sua biblioteca!");
+                        this.perfil.loadQtdeJogos(id);
                     }
                 } else {
                     JOptionPane.showMessageDialog(this, "O jogo " + jogo + " não foi encontrado no banco de dados.");
@@ -387,7 +391,7 @@ public class TelaBiblioteca extends JPanel {
 
                             
                             listaBiblioteca.revalidate();
-
+                            this.perfil.loadQtdeJogos(id);
                             JOptionPane.showMessageDialog(this, "O jogo " + jogoSelecionado + " foi removido da sua biblioteca!");
                         } else {
                             JOptionPane.showMessageDialog(this, "O jogo " + jogoSelecionado + " não foi encontrado no banco de dados.");
@@ -411,6 +415,22 @@ public class TelaBiblioteca extends JPanel {
             }
         }
     }
+
+	public TelaPerfil getPerfil() {
+		return perfil;
+	}
+
+	public void setPerfil(TelaPerfil perfil) {
+		this.perfil = perfil;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
     
 
 
