@@ -12,8 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TelaLoja extends JPanel {
-    private DefaultListModel<String> listaDeJogosModel;
-    private JList<String> listaDeJogos;
+    private DefaultListModel<String> listaDeJogosModel = new DefaultListModel<String>();;
+    private JList<String> listaDeJogos = new JList<>();
+    JScrollPane scrollPane = new JScrollPane();
     private Map<String, String> jogoId = new HashMap<String, String>();
 
     public TelaLoja(VaporFrame frame, JTabbedPane tabs, TelaBiblioteca biblioteca) {
@@ -31,30 +32,17 @@ public class TelaLoja extends JPanel {
 	        	PreparedStatement selectCon = conexao.prepareStatement(selectGame);
 				ResultSet resultCon = selectCon.executeQuery(selectGame);
 				
-				ArrayList<String> jogos = new ArrayList<String>();
-				ArrayList<String> distribuidoras = new ArrayList<String>();
-				
-				
 				while (resultCon.next()) { 
-				    jogos.add(resultCon.getString("nomeGame"));		
-				    distribuidoras.add(resultCon.getString("nomeDistribuidora"));
+					listaDeJogosModel.addElement(resultCon.getString("nomeGame"));
 				    jogoId.put(resultCon.getString("nomeGame"), Integer.toString(resultCon.getInt("idGame")));
 				}
-				
-				int tamanho = jogos.size();
-				
-				listaDeJogosModel = new DefaultListModel<>();
-				String jogo;
-				
-				for (int i = 0; i < tamanho; i++) {
-				    jogo = jogos.get(i);
-				    
-				    listaDeJogosModel.addElement(jogo);
-				}
-				listaDeJogos = new JList<>(listaDeJogosModel);
 		        
-		        JScrollPane scrollPane = new JScrollPane(listaDeJogos);
-		        
+				listaDeJogos.setModel(listaDeJogosModel);
+				scrollPane.setViewportView(listaDeJogos);
+				scrollPane.invalidate();
+				scrollPane.revalidate();
+				scrollPane.repaint();
+				
 		        add(scrollPane, BorderLayout.CENTER);
 
 		        listaDeJogos.addMouseListener(new MouseAdapter() {
