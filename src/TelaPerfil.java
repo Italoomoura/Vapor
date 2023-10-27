@@ -359,12 +359,12 @@ public class TelaPerfil extends javax.swing.JPanel {
 					updateCon.setInt(3, Integer.parseInt(idade));
 					updateCon.setString(4, email);
 					updateCon.setInt(5, ID);
-		            		updateCon.executeUpdate();
+		            updateCon.executeUpdate();
 		            
-		            		userNomeLabel.setText(nomeUser);
-	               			userIdadeLabel.setText("Idade: " + idade);
-	                		userEmailLabel.setText(email);
-		            		return true;
+		            userNomeLabel.setText(nomeUser);
+	                userIdadeLabel.setText("Idade: " + idade);
+	                userEmailLabel.setText(email);
+		            return true;
 				}
 				
 				if (tipo == 2) {
@@ -560,6 +560,28 @@ public class TelaPerfil extends javax.swing.JPanel {
         	System.exit(0);
         }
     }  
+    
+    public void loadQtdeJogos(int id) {
+    	try {
+	    	Class.forName("com.mysql.cj.jdbc.Driver");
+	        String url = "jdbc:mysql://localhost/vapor";
+	        Connection conexao = DriverManager.getConnection(url, "root", "root");
+	        String getCount = "SELECT COUNT(idGame) as qtd FROM possui WHERE idUser = ?";
+	        
+	        PreparedStatement selectCount = conexao.prepareStatement(getCount);
+	        selectCount.setInt(1, id);
+	        ResultSet resultado = selectCount.executeQuery();
+	        while (resultado.next()) {
+	        	qtdJogosLabel.setText("Jogos: " + resultado.getInt("qtd"));
+	        }
+    	} 
+    	catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} 
+    	catch (SQLException e) {
+			e.printStackTrace();
+		}
+    }
 
     
     private javax.swing.JButton buttonDev;
@@ -584,7 +606,7 @@ public class TelaPerfil extends javax.swing.JPanel {
     private javax.swing.JLabel userNomeLabel;
     private javax.swing.JLabel errorLabel;
     private javax.swing.JRadioButton radioButtonSenha;
-    private boolean stateButtonDados = false;
-    private boolean stateButtonDev = false;
-    private String path;
+	private boolean stateButtonDados = false;
+	private boolean stateButtonDev = false;
+	private String path;
 }
