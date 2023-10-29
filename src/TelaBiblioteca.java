@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -15,25 +13,121 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.sql.Date;
 
-public class TelaBiblioteca extends JPanel {
-    private DefaultListModel<String> bibliotecaModel;
-    private JList<String> listaBiblioteca;
-    private int idUser;
-    private JPanel gameInfoPanel;
-    private JLabel gameTitleLabel;
-    private JLabel gameDescriptionLabel;
-    private JLabel gameImageLabel;
-    private JButton playButton;
-    private TelaPerfil perfil;
-    private int id;
+public class TelaBiblioteca extends javax.swing.JPanel {
 
 
     public TelaBiblioteca(TelaPerfil perfil, int id) {
-        setLayout(new BorderLayout());
-        this.setPerfil(perfil);
-        this.setId(id);
-
+    	
+        setPerfil(perfil);
+        setId(id);
         loadGames();
+    	
+    	bibliotecaLabel1 = new javax.swing.JLabel();
+        bibliotecaLabel2 = new javax.swing.JLabel();
+        scrollPane = new javax.swing.JScrollPane();
+        gamePanel = new javax.swing.JPanel();
+        gameImage = new javax.swing.JLabel();
+        jogarButton = new javax.swing.JButton();
+        nomeGameLabel = new javax.swing.JLabel();
+        infoLabel = new javax.swing.JLabel();
+
+        bibliotecaLabel1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        bibliotecaLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        bibliotecaLabel1.setText("Sua biblioteca de jogos. ");
+        bibliotecaLabel1.setVerifyInputWhenFocusTarget(false);
+
+        bibliotecaLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        bibliotecaLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        bibliotecaLabel2.setText("Clique em um jogo duas vezes para removê-lo.");
+        bibliotecaLabel2.setVerifyInputWhenFocusTarget(false);
+
+        scrollPane.setViewportView(listaBiblioteca);
+        
+        infoLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        infoLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        infoLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        infoLabel.setMaximumSize(new java.awt.Dimension(200, 245));
+        infoLabel.setMinimumSize(new java.awt.Dimension(200, 245));
+        infoLabel.setPreferredSize(new java.awt.Dimension(200, 245));
+        infoLabel.setRequestFocusEnabled(false);
+        infoLabel.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+
+        jogarButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jogarButton.setText("Jogar");
+        jogarButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jogarButtonActionPerformed(evt);
+            }
+        });
+
+        nomeGameLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        nomeGameLabel.setText("Título do jogo");
+        
+        gameImage.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        gamePanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        javax.swing.GroupLayout gamePanelLayout = new javax.swing.GroupLayout(gamePanel);
+        gamePanel.setLayout(gamePanelLayout);
+        gamePanelLayout.setHorizontalGroup(
+            gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(gamePanelLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(gameImage, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jogarButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(nomeGameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(infoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        gamePanelLayout.setVerticalGroup(
+            gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(gamePanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(gamePanelLayout.createSequentialGroup()
+                        .addComponent(nomeGameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(infoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jogarButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(45, 45, 45))
+                    .addGroup(gamePanelLayout.createSequentialGroup()
+                        .addComponent(gameImage, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(bibliotecaLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(bibliotecaLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 788, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(gamePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(bibliotecaLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bibliotecaLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(scrollPane)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(gamePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
+        );
 
         listaBiblioteca.addMouseListener(new MouseAdapter() {
             @Override
@@ -43,126 +137,66 @@ public class TelaBiblioteca extends JPanel {
                 } 
             }
         });
-
-        JLabel boasVindasLabel = new JLabel("<html><center>Sua Biblioteca de Jogos<br>Clique duas vezes em um jogo para removê-lo.</center></html>");
-        boasVindasLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        add(boasVindasLabel, BorderLayout.NORTH);
         
-        gameInfoPanel = new JPanel();
-        gameInfoPanel.setLayout(new BorderLayout());
-        gameInfoPanel.setPreferredSize(new Dimension(600, 0));
-
-        gameTitleLabel = new JLabel();
-        gameTitleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        gamePanel.setVisible(false);
         
-        gameImageLabel = new JLabel();
-        
-        JPanel titleImagePanel = new JPanel();
-        titleImagePanel.setLayout(new BorderLayout());
-        titleImagePanel.add(gameTitleLabel, BorderLayout.NORTH);
-        titleImagePanel.add(gameImageLabel, BorderLayout.CENTER);
-                
-        gameInfoPanel.add(titleImagePanel, BorderLayout.NORTH);
-
-        gameDescriptionLabel = new JLabel();
-        gameDescriptionLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-
-
-        playButton = new JButton("Jogar");
-        playButton.setPreferredSize(new Dimension(120, 40));
-        playButton.setEnabled(false);
-        playButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                abrirJogo();
-            }
-        });
-        
-        JPanel descriptionAndButtonPanel = new JPanel();
-        descriptionAndButtonPanel.setLayout(new BorderLayout());
-        descriptionAndButtonPanel.add(gameDescriptionLabel, BorderLayout.CENTER);
-        descriptionAndButtonPanel.add(playButton, BorderLayout.SOUTH);
-        
-        JPanel titleImageDescriptionButtonPanel = new JPanel();
-        titleImageDescriptionButtonPanel.setLayout(new BorderLayout());
-        titleImageDescriptionButtonPanel.add(gameTitleLabel, BorderLayout.NORTH);
-        titleImageDescriptionButtonPanel.add(gameImageLabel, BorderLayout.CENTER);
-        titleImageDescriptionButtonPanel.add(descriptionAndButtonPanel, BorderLayout.EAST);
-        
-        gameInfoPanel.add(titleImageDescriptionButtonPanel, BorderLayout.NORTH);
-        
-        JScrollPane scrollPane = new JScrollPane(gameInfoPanel);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-
-        add(scrollPane, BorderLayout.EAST);
-    }
+    }    
+    
+    private void jogarButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        abrirJogo();
+    }  
     
     public void loadGames() {
-    	bibliotecaModel = new DefaultListModel<>();
-        
         Connection conexao = null;
 		String selectPossui = "SELECT * FROM possui WHERE idUser = ?";
 		String selectGame  = "SELECT * FROM games WHERE idGame = ?";
-		String selectUser = "SELECT * FROM users WHERE nickname = ?";
-		
-		
+
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 	        String url = "jdbc:mysql://localhost/vapor";
 	        conexao = DriverManager.getConnection(url, "root", "root");
 	
 	        if (conexao != null) {
-	        	String user = TelaLogin.getUserName();
-	        	
-	        	PreparedStatement selectCon = conexao.prepareStatement(selectUser);
-	        	selectCon.setString(1, user);
-	        	
-				ResultSet resultCon = selectCon.executeQuery();
-				resultCon.next();
-				
-				idUser = resultCon.getInt("idUser");
-		
 				ArrayList<String> jogos = new ArrayList<String>();
 				
 				PreparedStatement selectConGames = conexao.prepareStatement(selectPossui);
-				selectConGames.setInt(1, idUser);
+				selectConGames.setInt(1, id);
 				
 				ResultSet resultConGames = selectConGames.executeQuery();
 				
 				PreparedStatement selectConGamesNomes = conexao.prepareStatement(selectGame);
 				ResultSet resultConGamesNomes;
-				
+				int i =0;
 				while (resultConGames.next()) { 
 					selectConGamesNomes.setInt(1, resultConGames.getInt("idGame"));
-					
+					System.out.println(resultConGames.getInt("idGame"));
 					resultConGamesNomes = selectConGamesNomes.executeQuery();
 					resultConGamesNomes.next();
-					
+					System.out.println(resultConGamesNomes.getString("nomeGame"));
 					jogos.add(resultConGamesNomes.getString("nomeGame"));
+					bibliotecaModel.addElement(resultConGamesNomes.getString("nomeGame"));
+					System.out.println("Isso:" + bibliotecaModel.getElementAt(i));
+					i++;
 				}
 				
-				String jogo;
-				int tamanho = jogos.size();
 				
-				for (int i = 0; i < tamanho; i++) {
-				    jogo = jogos.get(i);
-				    
-				    bibliotecaModel.addElement(jogo);
-				}
+				listaBiblioteca.setModel(bibliotecaModel);
 				
-				listaBiblioteca = new JList<>(bibliotecaModel);
-				
-				JScrollPane scrollPane = new JScrollPane(listaBiblioteca);
-		        add(scrollPane, BorderLayout.CENTER);
+				scrollPane.setViewportView(listaBiblioteca);
+		        
 	        }
-		} catch (SQLException | ClassNotFoundException e) {
+		} 
+		
+		catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
-        } finally {
+        } 
+		
+		finally {
             if (conexao != null) {
                 try {
                     conexao.close();
-                } catch (SQLException e) {
+                } 
+                catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
@@ -172,6 +206,7 @@ public class TelaBiblioteca extends JPanel {
     }
     
     public void showGameInfo() {
+    	gamePanel.setVisible(true);
         int selectedIndex = listaBiblioteca.getSelectedIndex();
 
         if (selectedIndex != -1) {
@@ -193,23 +228,22 @@ public class TelaBiblioteca extends JPanel {
                     if (resultGameInfo.next()) {
                         String descricao = resultGameInfo.getString("info");
                         String nome = resultGameInfo.getString("nomeGame");
-                        gameTitleLabel.setText(nome);
+                        nomeGameLabel.setText(nome);
                         
                         String caminhoImagem = resultGameInfo.getString("caminhoImagem");
     	            	if (caminhoImagem != null && !caminhoImagem.isEmpty()) {
-    	            		System.out.println("cu");
     	            	    ImageIcon iconImg = new ImageIcon(caminhoImagem);
     	            	    Image imageImg = iconImg.getImage();
     	            	    Image finalImg = imageImg.getScaledInstance(240, 400, Image.SCALE_SMOOTH);
     	            	    ImageIcon capa = new ImageIcon(finalImg);
-    	            	    gameImageLabel.setIcon(capa);
-    	            	    gameImageLabel.setVisible(true);
+    	            	    gameImage.setIcon(capa);
+    	            	    gameImage.setVisible(true);
     	            	} else {
-    	            	    gameImageLabel.setVisible(false);
+    	            	    gameImage.setVisible(false);
     	            	}
     	            	
-                        gameDescriptionLabel.setText("<html>" + descricao + "</html>");
-                        playButton.setEnabled(true);
+                        infoLabel.setText("<html>" + descricao + "</html>");
+                        jogarButton.setEnabled(true);
                     }
                 }
             } catch (ClassNotFoundException | SQLException e) {
@@ -297,7 +331,7 @@ public class TelaBiblioteca extends JPanel {
 
                     
                     PreparedStatement verificaJogoCon = conexao.prepareStatement(verificaJogo);
-                    verificaJogoCon.setInt(1, idUser);
+                    verificaJogoCon.setInt(1, id);
                     verificaJogoCon.setInt(2, idGame);
                     ResultSet resultVerificaJogo = verificaJogoCon.executeQuery();
 
@@ -305,7 +339,7 @@ public class TelaBiblioteca extends JPanel {
                         JOptionPane.showMessageDialog(this, "O jogo " + jogo + " já está na sua biblioteca!");
                     } else {
                         PreparedStatement insertCon = conexao.prepareStatement(insertPossui);
-                        insertCon.setInt(1, idUser);
+                        insertCon.setInt(1, id);
                         insertCon.setInt(2, idGame);
                         insertCon.setDate(3, Date.valueOf(LocalDate.now()));
 
@@ -382,7 +416,7 @@ public class TelaBiblioteca extends JPanel {
 
                             
                             PreparedStatement deleteCon = conexao.prepareStatement(deletePossui);
-                            deleteCon.setInt(1, idUser);
+                            deleteCon.setInt(1, id);
                             deleteCon.setInt(2, idGame);
                             deleteCon.executeUpdate();
 
@@ -415,8 +449,8 @@ public class TelaBiblioteca extends JPanel {
             }
         }
     }
-
-	public TelaPerfil getPerfil() {
+    
+    public TelaPerfil getPerfil() {
 		return perfil;
 	}
 
@@ -432,6 +466,16 @@ public class TelaBiblioteca extends JPanel {
 		this.id = id;
 	}
     
-
-
+	private TelaPerfil perfil;
+	private int id;
+    private DefaultListModel<String> bibliotecaModel = new DefaultListModel<>();
+    private javax.swing.JLabel bibliotecaLabel1;
+    private javax.swing.JLabel bibliotecaLabel2;
+    private javax.swing.JLabel gameImage;
+    private javax.swing.JPanel gamePanel;
+    private javax.swing.JLabel infoLabel;
+    private javax.swing.JButton jogarButton;
+    private javax.swing.JList<String> listaBiblioteca = new JList<>();
+    private javax.swing.JLabel nomeGameLabel;
+    private javax.swing.JScrollPane scrollPane = new JScrollPane();                
 }
