@@ -443,7 +443,6 @@ public class TelaPerfil extends javax.swing.JPanel {
         arquivo.showDialog(this, "Escolha seu arquivo de imagem.");
         arquivo.setVisible(true);
         path = arquivo.getSelectedFile().toString();
-        sql(4, username, id);
         ImageIcon iconImg = new ImageIcon(path);
 	    Image imageImg = iconImg.getImage();
 	    Image finalImg = imageImg.getScaledInstance(160, 126, Image.SCALE_SMOOTH);
@@ -451,11 +450,12 @@ public class TelaPerfil extends javax.swing.JPanel {
 	    userImagem.setIcon(capa);
 	    userImagem.setVisible(true);
 	    String ext = arquivo.getSelectedFile().getAbsolutePath().toString().substring(path.lastIndexOf("."), path.length());
-	    path = "C:\\Vapor\\Profile Picture\\ " + username + ext;
+	    path = "C:\\Vapor\\Profile Picture\\" + username + ext;
 	    File verifyPath = new File(path);
 	    if(verifyPath.exists()) {
 	    	verifyPath.delete();
 	    }
+        sql(4, username, id);
 	    FileUtils.copyFile(arquivo.getSelectedFile(), new File(path));
     }                                        
 
