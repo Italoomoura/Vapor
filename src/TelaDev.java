@@ -1,3 +1,5 @@
+package tela;
+
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
@@ -326,6 +328,12 @@ public class TelaDev extends javax.swing.JPanel {
     		descontoText = "0";
     	}
     	
+    	if(Float.parseFloat(descontoText) >= Float.parseFloat(precoText)) {
+    		errorLabel.setText("O preço de desconto não pode ser maior que o preço normal");
+    		errorLabel.setVisible(true);
+    		return false;
+    	}
+    	
     	if(infoText.length() > 1000) {
     		errorLabel.setText("Mantenha a info abaixo de 1000 caracteres");
     		errorLabel.setVisible(true);
@@ -348,7 +356,7 @@ public class TelaDev extends javax.swing.JPanel {
     	return true;
     }
     
-private boolean sql(int tipo, String username, int id) {
+    private boolean sql(int tipo, String username, int id) {
     	
     	Connection conexao = null;
 		String insertGame = "INSERT INTO games (nomeGame, nomeDistribuidora, nomeDev, preco, precoDesconto, lancamento, isDesconto, download, info, genero, caminhoImagem) VALUES"
@@ -374,7 +382,6 @@ private boolean sql(int tipo, String username, int id) {
 					
 					while(resultado.next()) {
 						listaDeJogos.addElement(resultado.getString("nomeGame"));
-						System.out.println(resultado.getString("nomeGame"));
 					}
 										
 					jogosList.setModel(listaDeJogos);
@@ -574,7 +581,7 @@ private boolean sql(int tipo, String username, int id) {
     	arquivo.setFileFilter(new FileNameExtensionFilter("Text File", "txt"));
     	arquivo.showDialog(this, "Escolha seu arquivo do jogo.");
         arquivo.setVisible(true);
-    	FileUtils.copyFile(arquivo.getSelectedFile(), new File("C:\\Vapor\\Arquivos\\ " + nomeGame + ".txt"));
+    	FileUtils.copyFile(arquivo.getSelectedFile(), new File("C:\\Vapor\\Arquivos\\" + nomeGame + ".txt"));
     	pathArquivo = "C:\\Vapor\\Arquivos\\" + nomeGame + ".txt";
     	arquivoButton.setText(arquivo.getSelectedFile().getName());
     	
@@ -598,14 +605,14 @@ private boolean sql(int tipo, String username, int id) {
         String path = arquivo.getSelectedFile().getAbsoluteFile().toString();
         String ext = path.substring(path.lastIndexOf("."), path.length());
         
-        File file = new File("C:\\Vapor\\Game Picture\\ " + nomeGame + ext);
+        File file = new File("C:\\Vapor\\Game Picture\\" + nomeGame + ext);
         
         if (file.exists()) {
         	file.delete();
         }
         
         FileUtils.copyFile(arquivo.getSelectedFile(), file);
-    	pathImagem = "C:\\Vapor\\Game Picture\\ " + nomeGame + ext;
+    	pathImagem = "C:\\Vapor\\Game Picture\\" + nomeGame + ext;
     	
     	ImageIcon iconImg = new ImageIcon(pathImagem);
 	    Image imageImg = iconImg.getImage();

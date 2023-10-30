@@ -1,3 +1,5 @@
+package tela;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -166,19 +168,13 @@ public class TelaBiblioteca extends javax.swing.JPanel {
 				
 				PreparedStatement selectConGamesNomes = conexao.prepareStatement(selectGame);
 				ResultSet resultConGamesNomes;
-				int i =0;
 				while (resultConGames.next()) { 
 					selectConGamesNomes.setInt(1, resultConGames.getInt("idGame"));
-					System.out.println(resultConGames.getInt("idGame"));
 					resultConGamesNomes = selectConGamesNomes.executeQuery();
 					resultConGamesNomes.next();
-					System.out.println(resultConGamesNomes.getString("nomeGame"));
 					jogos.add(resultConGamesNomes.getString("nomeGame"));
 					bibliotecaModel.addElement(resultConGamesNomes.getString("nomeGame"));
-					System.out.println("Isso:" + bibliotecaModel.getElementAt(i));
-					i++;
 				}
-				
 				
 				listaBiblioteca.setModel(bibliotecaModel);
 				
@@ -282,8 +278,6 @@ public class TelaBiblioteca extends javax.swing.JPanel {
                         String caminhoArquivo = resultado.getString("download");
                         try {
                             File arquivo = new File(caminhoArquivo);
-                            System.out.println(caminhoArquivo);
-
                             if (arquivo.exists()) {
                                 Desktop.getDesktop().open(arquivo);
                             } else {
@@ -342,8 +336,14 @@ public class TelaBiblioteca extends javax.swing.JPanel {
                         insertCon.setInt(1, id);
                         insertCon.setInt(2, idGame);
                         insertCon.setDate(3, Date.valueOf(LocalDate.now()));
-
-                        float preco = resultGameId.getInt("preco");
+                        
+                        float preco;
+                        if(resultGameId.getInt("isDesconto") == 0) {
+                        	preco = resultGameId.getFloat("preco");
+                        }
+                        else {
+                        	preco = resultGameId.getFloat("precoDesconto");
+                        }
                         insertCon.setFloat(4, preco);
 
                         insertCon.executeUpdate();

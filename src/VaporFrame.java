@@ -1,3 +1,5 @@
+package tela;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -10,7 +12,10 @@ public class VaporFrame extends JFrame {
         setTitle("Vapor");
         setPreferredSize(new Dimension(800, 570));
         setResizable(false);
-
+        
+        ImageIcon icon = new ImageIcon("C:\\Users\\gusta\\OneDrive\\Área de Trabalho\\vaporicone.jpeg");
+        this.setIconImage(icon.getImage());
+        
         tabbedPane = new JTabbedPane();
         
         TelaPerfil telaPerfil = new TelaPerfil(login.getUserName(), login.getID());

@@ -1,3 +1,5 @@
+package tela;
+
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
@@ -338,19 +340,19 @@ public class TelaPerfil extends javax.swing.JPanel {
 				}
 				
 				if (tipo == 1) {
-					String nome = textFieldNome.getText().trim();
-					String select = "SELECT nickname FROM users WHERE nickname = ?";
-					PreparedStatement selectCon = conexao.prepareStatement(select);
-					selectCon.setString(1, nome);
-					ResultSet resultado = selectCon.executeQuery();
-					if(resultado.next() && !resultado.getString("nickname").equals(username)) {
-						return false;
-					}
-					
 					String nomeUser, idade, email;
 					nomeUser = textFieldNome.getText().trim();
 					idade = textFieldIdade.getText().trim();
 					email = textFieldEmail.getText().trim();
+					String select = "SELECT nickname FROM users WHERE nickname = ?";
+					String updateDev = "UPDATE games SET nomeDev = ? WHERE nomeDev = ?";
+					
+					PreparedStatement selectCon = conexao.prepareStatement(select);
+					selectCon.setString(1, nomeUser);
+					ResultSet resultado = selectCon.executeQuery();
+					if(resultado.next() && !resultado.getString("nickname").equals(username)) {
+						return false;
+					}
 					
 					PreparedStatement updateCon = conexao.prepareStatement(updateUsers);
 					String senhaText = new String(textFieldSenha.getPassword());
@@ -359,6 +361,12 @@ public class TelaPerfil extends javax.swing.JPanel {
 					updateCon.setInt(3, Integer.parseInt(idade));
 					updateCon.setString(4, email);
 					updateCon.setInt(5, ID);
+		            
+		            PreparedStatement updateConDev = conexao.prepareStatement(updateDev);
+		            updateConDev.setString(1, nomeUser);
+		            updateConDev.setString(2, username);
+		            
+		            updateConDev.executeUpdate();
 		            updateCon.executeUpdate();
 		            
 		            userNomeLabel.setText(nomeUser);
@@ -549,6 +557,8 @@ public class TelaPerfil extends javax.swing.JPanel {
     		stateButtonDev = !stateButtonDev;
         }
 		buttonDev.setText((!stateButtonDev ? "Ativar": "Desativar") + " modo desenvolvedor");
+		JOptionPane.showMessageDialog(this, "Devido a operação de mudança de estado de desenvolvedor, o sistema será fechado para realizar alterações.");
+		System.exit(0);
     }                                         
 
     private void buttonDeleteAccountActionPerformed(java.awt.event.ActionEvent evt, String username, int id) {                                                    

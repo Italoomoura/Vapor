@@ -1,3 +1,5 @@
+package tela;
+
 import java.awt.Image;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -140,10 +142,6 @@ public class TelaJogoComprar extends javax.swing.JPanel {
         nomeGame = setComponents(idGame); 
     }    
     
-  
-
-
-
 	private String setComponents(int idGame) {
     	Connection conexao = null;
 		String selectGames = "SELECT * FROM games WHERE idGame = ?";
@@ -175,8 +173,7 @@ public class TelaJogoComprar extends javax.swing.JPanel {
 	            	generoLabel.setText("Gênero: " + resultado.getString("genero"));
 	            	
 	            	if(isDesconto == 1) {
-	            		System.out.println(Float.toString(resultado.getFloat("precoDesconto")));
-	            		gameDescontoLabel.setText(Float.toString(resultado.getFloat("precoDesconto")));
+	            		gameDescontoLabel.setText("R$"+formatPreco.format(resultado.getFloat("precoDesconto")));
 	            		gameDescontoLabel.setVisible(true);
 	            		gamePrecoLabel.setText("<html><s>R$" + preco + "</s></html>");
 	            	}
@@ -225,7 +222,6 @@ public class TelaJogoComprar extends javax.swing.JPanel {
 	            }
 	        }
 	    }
-	    System.out.println("aqui?");
 		return "";
     }
 
