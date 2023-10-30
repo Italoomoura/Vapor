@@ -374,6 +374,7 @@ public class TelaDev extends javax.swing.JPanel {
 	            System.out.println("Conexão com o SQL Server estabelecida com sucesso!");
 	            
 	            if (tipo == 0) {
+			    listaDeJogos.removeAllElements();
 	            	PreparedStatement selectCon = conexao.prepareStatement(selectGameUser);
 					selectCon.setString(1, username);
 					ResultSet resultado = selectCon.executeQuery();
