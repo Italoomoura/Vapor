@@ -11,7 +11,7 @@ public class VaporFrame extends JFrame {
         setPreferredSize(new Dimension(800, 570));
         setResizable(false);
         
-        ImageIcon icon = new ImageIcon("C:\\Users\\gusta\\OneDrive\\Área de Trabalho\\vaporicone.jpeg");
+        ImageIcon icon = new ImageIcon("C:\\Vapor\\icone.jpeg");
         this.setIconImage(icon.getImage());
         
         tabbedPane = new JTabbedPane();
